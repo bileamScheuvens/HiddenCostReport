@@ -24,7 +24,6 @@
 | Worker Rights Consortium       | Factory investigations             | Worker Rights Consortium (non-profit)    | Not specified  | No         | PDF reports         | Ongoing             | Global (garment focus)    |
 | **CORPORATE ACCOUNTABILITY**   |                                    |                                          |                |            |                     |                     |                           |
 | Corporate Europe Observatory   | EU lobbying, corporate influence   | Corporate Europe Observatory (NGO)       | Not specified  | No         | Web scraping needed | Ongoing             | European Union            |
-| InfluenceMap                   | Climate lobbying analysis          | InfluenceMap (non-profit)                | Proprietary    | No         | Web, PDF            | Quarterly           | Global                    |
 | Violation Tracker              | Corporate violations database      | Good Jobs First (non-profit)             | Not specified  | No         | Searchable database | Ongoing             | Primarily US              |
 | Environmental Justice Atlas    | Environmental conflicts            | ICTA-UAB & partners                      | CC BY 4.0      | No         | Web, exportable     | Ongoing             | Global                    |
 | Toxic News                     | Chemical pollution tracking        | Not specified                            | Not specified  | No         | News aggregation    | Real-time           | Global                    |
@@ -59,11 +58,10 @@
 
 
 ## Priorities & Integration 
-
 | Source                         | Priority | Quality   | Integration Notes                                                                                           | 
-|--------------------------------|----------|---------  |----------------------                                                                                       |
+|--------------------------------|----------|-----------|-------------------------------------------------------------------------------------------------------------|
 | **SUPPLY CHAIN TRANSPARENCY**  |          |           |                                                                                                             |
-| Open Corporates                | high     |           | can request with mvp                                                                                         |
+| Open Corporates                | high     |           | can request with mvp                                                                                        |
 | Panjiva                        | low      |           |                                                                                                             |
 | Trase                          | med      | good      | million small csvs for south america. Useful but n/a for many products                                      |
 | Resource Watch                 | med      | excellent | GeoJson for everything, but not tied company/product. Would need scoring for does bad in already bad place. |
@@ -83,24 +81,23 @@
 | China Labour Bulletin          |          |           |                                                                                                             |
 | Worker Rights Consortium       |          |           |                                                                                                             |
 | **CORPORATE ACCOUNTABILITY**   |          |           |                                                                                                             |
-| Corporate Europe Observatory   |          |           |                                                                                                             |
-| InfluenceMap                   |          |           |                                                                                                             |
+| Corporate Europe Observatory   | low      | low       | collection of articles around lobbyism. Might attach links to relevant companies, no easy automation        |
 | Violation Tracker              |          |           |                                                                                                             |
 | Environmental Justice Atlas    |          |           |                                                                                                             |
 | Toxic News                     |          |           |                                                                                                             |
 | **EU-SPECIFIC REGULATORY DATA**|          |           |                                                                                                             |
-| EU REACH Database              |          |           |                                                                                                             |
+| EU REACH Database              | low      | med       | web interface for searching for chemicals                                                                   |
 | EU ETS                         |          |           |                                                                                                             |
 | E-PRTR                         |          |           |                                                                                                             |
 | EU CSRD Database               |          |           |                                                                                                             |
 | EU Taxonomy Compass            |          |           |                                                                                                             |
 | **CARBON & CLIMATE**           |          |           |                                                                                                             |
-| Carbon Disclosure Project      |          |           |                                                                                                             |
-| Climate TRACE                  |          |           |                                                                                                             |
-| Ember                          |          |           |                                                                                                             |
-| Our World in Data              |          |           |                                                                                                             |
+| Carbon Disclosure Project      | low      |           | expensive license                                                                                           |
+| Climate TRACE                  | high     | high      | emission data by country or sector via csv or api                                                           |
+| Ember                          | med      | med       | electricity data in different categories via csv or api                                                     |
+| Our World in Data              | med      | high      | ~15k small datasets, hard to sort through by product. Would need LLM                                        |
 | **NGO REPORTS**                |          |           |                                                                                                             |
-| Bellingcat                     |          |           |                                                                                                             |
+| Bellingcat                     | low      | low       | no data, just articles & reports. Developed auto-archiver, results are internal, tool is open source.       |
 | Earthsight                     |          |           |                                                                                                             |
 | Global Witness                 |          |           |                                                                                                             |
 | Greenpeace Investigations      |          |           |                                                                                                             |
@@ -110,8 +107,8 @@
 | Google Scholar                 |          |           |                                                                                                             |
 | Sustainalytics                 |          |           |                                                                                                             |
 | CSRHub                         |          |           |                                                                                                             |
-| RepRisk                        |          |           |                                                                                                             |
+| RepRisk                        | low      |           | annoying api, no public data, aggregrates proprietary risk scores                                           |
 | **CROWDSOURCED & WIKI-STYLE**  |          |           |                                                                                                             |
 | OpenStreetMap                  |          |           |                                                                                                             |
-| Wikirate                       |          |           |                                                                                                             |
+| Wikirate                       | top      | excellent | many individual datasets and rankings, filterable by company. Has api.                                      |
 | Open Apparel Registry          |          |           |                                                                                                             |
