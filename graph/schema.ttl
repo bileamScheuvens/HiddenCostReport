@@ -1,0 +1,30 @@
+@prefix : <http://hiddencostreport.org/schema> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+
+@prefix wr: <https://wikirate.org> .
+
+
+:Company a rdfs:Class .
+:Product a rdfs:Class .
+:Article a rdfs:Class .
+:Metric a rdfs:Class .
+:DataSet a rdfs:Class .
+:Datapoint a rdfs:Class .
+
+:OpenCorporatesID a rdf:property ;
+  rdfs:domain :Company ;
+  rdfs:range rdfs:literal .
+
+:WikirateID a rdf:property ;
+  rdfs:domain :Company ;
+  rdfs:range rdfs:literal .
+
+
+
+
+
+
+
