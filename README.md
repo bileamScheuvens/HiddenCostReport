@@ -1,9 +1,13 @@
 ## Hidden Cost Report
 Tool for convenient information gathering on products / companies to inform decisions.
-End goal is actual hidden cost calculation. Not remotely feasible right now.
-As approximation, give more holistic picture beyond just price and quality.
+End goal is actual hidden cost calculation. Unlikely to be feasible with public information currently.
+As approximation, at least give more holistic picture beyond just price and quality.
 Report should showcase exploitation of people and planet, broken laws, corporate ties and de facto monopolies.
 
+## Preprocessing
+- Index for companies and available sources
+- tag / classify sources with unit measurement 
+- approximate conversion to interesting metrics (true cost, cumulative years lost, ...)
 
 ## Report generation routine
 - Specify product (maybe also just company)
