@@ -17,3 +17,18 @@ Report should showcase exploitation of people and planet, broken laws, corporate
 
 
 
+
+
+## Prototype scope:
+100 Companies (most data points as of 11/25)
+500 Metrics (with environmental tag, most bookmarked as of 11/25)
+
+
+## Timeline:
+12/25 - kickoff, research, categorization of sources
+01/26 - final schema, graph construction
+02/26 - text processing / news article integration
+03/26 - minimal (t?)ui, search utilities, evaluation
+04/26 - buffer
+05/26 - report
+
