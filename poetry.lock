@@ -506,4 +506,4 @@ test = ["html2text", "mock", "nose", "python-dotenv", "vcrpy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "7b54c4118fe771f91c7e9424f8b59872fd3ff2d353928b13defef07c0ea6dba8"
+content-hash = "ca56ef54c067b6141611bbfac292ef2c6549f33e23f2562321aea1e252db1bba"
