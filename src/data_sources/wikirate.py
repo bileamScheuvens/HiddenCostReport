@@ -50,7 +50,7 @@ def parse_companies(store: Store, filename: str = "companies_100.csv") -> dict:
 
 
 
-def parse_scope1_emissions(store: Store, filename: str = "scope1_emissions.csv", company_id_lookup = {}):
+def parse_scope1_emissions(store: Store, filename: str = "scope1_emissions.csv", company_id_lookup: dict = {}):
     def _parse_row(x: Series):
         if x["Company"] not in company_id_lookup:
             return

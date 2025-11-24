@@ -36,3 +36,32 @@ Report should showcase exploitation of people and planet, broken laws, corporate
 04/26 - buffer
 05/26 - report
 
+
+
+## Source Documentation:
+
+### Wikirate
+Repository of metrics and datasets linked to companies.
+
+#### Method of integration:
+CSVs parsed to rdf in schema from graph/schema.ttl
+
+
+
+### OpenProductsFacts
+Crowdsourced DB of food items linked with ingredients, nutrients, packaging information and nutriscore.
+Previously just OpenFoodFacts.
+
+#### Method of integration:
+Parsed from CSV.
+OpenFoodFacts has a partial rdf export, but the english locale is also in french.\
+Columns used:
+- code 
+- product_name 
+- brands_en
+- ingredients_tags
+- manufacturing_places
+
+
+
+

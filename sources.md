@@ -82,7 +82,7 @@
 | Worker Rights Consortium       |          |           |                                                                                                               |
 | **CORPORATE ACCOUNTABILITY**   |          |           |                                                                                                               |
 | Corporate Europe Observatory   | low      | low       | collection of articles around lobbyism. Might attach links to relevant companies, no easy automation          |
-| Violation Tracker              |          |           |                                                                                                               |
+| Violation Tracker              | med      | high      | free tier with just search, export is expensive                                                               |
 | Environmental Justice Atlas    |          |           |                                                                                                               |
 | Toxic News                     |          |           |                                                                                                               |
 | **EU-SPECIFIC REGULATORY DATA**|          |           |                                                                                                               |
@@ -112,3 +112,6 @@
 | OpenStreetMap                  | low      | high      | questionable use but good availability                                                                        |
 | Wikirate                       | top      | excellent | many individual datasets and rankings, filterable by company. Has api.                                        |
 | Open Apparel Registry          | med      | med       | api is expensive, webinterface ok for finding concrete factories                                              |
+| **PRODUCT SPECIFIC**           |          |           |                                                                                                               |
+| Open Products / food Facts     | high     | excellent | rdf export in french but working csv export. Needs harmonization but rich and easily parseable                |
+
