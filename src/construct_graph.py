@@ -1,7 +1,8 @@
 import os
 from time import time
+from typing import Tuple, Dict
 from .constants import ROOT, DATADIR
-from pyoxigraph import Store, NamedNode, Literal, Quad, Triple
+from pyoxigraph import Store
 from .data_sources.wikirate import parse_companies, parse_metrics, parse_scope1_emissions
 from .data_sources.openproductsfacts import parse_productsfacts
 import pyoxigraph as pox
@@ -9,8 +10,9 @@ import pyoxigraph as pox
 
 
 
-def build_graph() -> Store:
+def build_graph() -> Tuple[Store, Dict]:
     store = Store(os.path.join(DATADIR, "graph"))
+    store.clear()
     start = time()
     
     with open(os.path.join(ROOT, "..", "graph", "schema.ttl")) as f:
@@ -19,13 +21,12 @@ def build_graph() -> Store:
 
     company_id_lookup = parse_companies(store)
     print(f"parsed companies after {time() - start}")
-    parse_metrics(store)
+    # parse_metrics(store)
     print(f"parsed metrics after {time() - start}")
 
     parse_scope1_emissions(store, company_id_lookup=company_id_lookup)
     print(f"parsed scope1 emissions after {time() - start}")
-    parse_productsfacts(store)
+    # parse_productsfacts(store)
     print(f"parsed openproductsfacts emissions after {time() - start}")
     return store, company_id_lookup
 
-build_graph()

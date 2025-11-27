@@ -34,7 +34,12 @@ Report should showcase exploitation of people and planet, broken laws, corporate
 02/26 - text processing / news article integration
 03/26 - minimal (t?)ui, search utilities, evaluation
 04/26 - buffer
-05/26 - report
+05/26 - Report
+
+Other Milestones:
+- UI
+- Joining other datasources in rdf (wikidata)
+- query translation
 
 
 

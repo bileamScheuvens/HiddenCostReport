@@ -5,6 +5,7 @@ import dotenv
 import pandas as pd
 from pandas.core.series import Series
 import os
+from ..harmonization import CompanyIDLookup
 from ..constants import ROOT, DATADIR, NS
 
 dotenv.load_dotenv(os.path.join(ROOT, ".env"))
@@ -32,12 +33,18 @@ def parse_metrics(store: Store, filename: str = "metrics_500.csv"):
 
 def parse_companies(store: Store, filename: str = "companies_100.csv") -> dict:
     """Parse companies from csv to rdf and return lookup for id. """
-    company_id_lookup = {}
+    company_id_lookup = CompanyIDLookup()
     def _parse_company_row(x: Series):
         # construct name with prefix C for company
         id = NS + "C" + str(x["ID"])
         company = NamedNode(id)
         company_id_lookup[x["Name"]] = id
+        # TODO: Columnms are misaligned, aliases are in headquarters. Fix
+        aliases = x["Headquarters"]
+        if not pd.isna(aliases):
+            for alias in aliases.split(";"):
+                company_id_lookup[alias] = id
+                
 
         store.add(Quad(company, NamedNode(NS+"Name"), Literal(x["Name"])))
 
