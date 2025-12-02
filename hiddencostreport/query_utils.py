@@ -13,13 +13,14 @@ def get_emissions_by_name(store, company, company_id_lookup={}):
     ?m <{NS}Year> ?year .
     }}
     """
-    for row in store.query(query):
-        print(f"{row['emissions']} tons in {row['year'].value}")
+    return [f"{row['emissions']} tons in {row['year'].value}" for row in store.query(query)]
 
 
 
 
 store, company_id_lookup = build_graph()
 # store.optimize()
-get_emissions_by_name(store,"nestle inc", company_id_lookup=company_id_lookup )
+results = get_emissions_by_name(store,"nestle inc", company_id_lookup=company_id_lookup )
+
+print("\n".join(results))
 

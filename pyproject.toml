@@ -11,11 +11,10 @@ dependencies = [
     "python-dotenv (>=1.1.1,<2.0.0)",
     "wikirate4py (>=2.0.4,<3.0.0)",
     "pyoxigraph (>=0.5.2,<0.6.0)",
-    "pandas (>=2.3.3,<3.0.0)"
+    "pandas (>=2.3.3,<3.0.0)",
+    "streamlit (>=1.51.0,<2.0.0)",
+    "streamlit-searchbox (>=0.1.23,<0.2.0)"
 ]
-
-[tool.poetry]
-package-mode = false
 
 
 [build-system]

@@ -20,8 +20,8 @@ def parse_metrics(store: Store, filename: str = "metrics_500.csv"):
     def _parse_metric_row(x: Series):
         # construct name with prefix M for metric
         metric = NamedNode(NS + "M" + x["ID"][1:])
-        store.add(Quad(metric, NamedNode(NS+"Title"), Literal(x["Metric Title"])))
-        store.add(Quad(metric, NamedNode(NS+"Designer"), Literal(x["Metric Designer"])))
+        store.add(Quad(metric, NamedNode(NS+"MetricTitle"), Literal(x["Metric Title"])))
+        store.add(Quad(metric, NamedNode(NS+"MetricDesigner"), Literal(x["Metric Designer"])))
         store.add(Quad(metric, NamedNode(NS+"Questions"), Literal(x["Questions"])))
         store.add(Quad(metric, NamedNode(NS+"ValueType"), Literal(x["Value Type"])))
         store.add(Quad(metric, NamedNode(NS+"Unit"), Literal(x["Unit"])))
@@ -63,6 +63,7 @@ def parse_scope1_emissions(store: Store, filename: str = "scope1_emissions.csv",
             return
         observation = BlankNode()
         company = NamedNode(company_id_lookup[x["Company"]])
+        # TODO: link to actual metric
         store.add(Quad(company, NamedNode(NS+"hasMetric"), observation))
         store.add(Quad(observation, NamedNode(NS+"MetricName"), Literal(x["Metric"])))
         store.add(Quad(observation, NamedNode(NS+"Year"), Literal(x["Year"])))

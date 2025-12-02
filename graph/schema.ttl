@@ -11,20 +11,49 @@
 :Product a rdfs:Class .
 :Article a rdfs:Class .
 :Metric a rdfs:Class .
-:DataSet a rdfs:Class .
+:Observation a rdfs:Class .
+:Dataset a rdfs:Class .
 :Datapoint a rdfs:Class .
+:Product a rdfs:Class .
+
+:Name a rdf:property ;
+  rdfs:range rdfs:literal .
 
 :OpenCorporatesID a rdf:property ;
   rdfs:domain :Company ;
   rdfs:range rdfs:literal .
 
-:WikirateID a rdf:property ;
-  rdfs:domain :Company ;
+
+:MetricTitle a rdf:property ;
+  rdfs:domain :Metric ;
   rdfs:range rdfs:literal .
 
+:MetricDesigner a rdf:property ;
+  rdfs:domain :Metric ;
+  rdfs:range rdfs:literal .
 
+:Questions a rdf:property ;
+  rdfs:domain :Metric ;
+  rdfs:range rdfs:literal .
 
+:ValueType a rdf:property ;
+  rdfs:domain :Metric ;
+  rdfs:range rdfs:literal .
 
+:Unit a rdf:property ;
+  rdfs:domain :Metric ;
+  rdfs:range rdfs:literal .
 
+:hasMetric a rdf:property;
+  rdfs:domain :Company ;
+  rdfs:range :Observation .
 
+:Brand a rdf:property ;
+  rdfs:domain :Product .
 
+:Ingredient a rdf:property ;
+  rdfs:domain :Product .
+
+:ManufacturedIn a rdf:property ;
+  rdfs:domain :Product .
+  
