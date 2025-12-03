@@ -1,8 +1,8 @@
-from pyoxigraph import Store, NamedNode, Literal, Quad, BlankNode
+from pyoxigraph import Store, NamedNode, Literal, Quad
 import pandas as pd
 from pandas.core.series import Series
 import os
-from ..constants import ROOT, DATADIR, NS
+from ..constants import DATADIR, NS
 
 
 def parse_productsfacts(store: Store, filename: str = "openproductsfacts/en_openproductsfacts.csv", company_id_lookup: dict = {}):
