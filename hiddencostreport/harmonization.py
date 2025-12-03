@@ -28,6 +28,10 @@ class CompanyIDLookup(UserDict):
     def __contains__(self, key):
         return self.sanitize_name(key) in self.data
 
+    def autocomplete_search(self, term):
+        term = self.sanitize_name(term)
+        return [key for key in self.data if key.startswith(term)]
+
     def __getitem__(self, key):
         return self.data[self.sanitize_name(key)]
 
