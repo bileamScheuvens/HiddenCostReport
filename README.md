@@ -40,6 +40,9 @@ Other Milestones:
 - UI
 - Joining other datasources in rdf (wikidata)
 - query translation
+- qlever integration
+- download schedule / overview
+- logging
 
 
 
