@@ -1,22 +1,17 @@
 import streamlit as st
 from streamlit_searchbox import st_searchbox
-from hiddencostreport.query_utils import get_emissions_by_name
-from hiddencostreport.construct_graph import load_graph, load_idlookup
+from hiddencostreport.harmonization import GraphManager
 from hiddencostreport.constants import NS
 
 
 @st.cache_resource
 def cached_graph():
-    return load_graph()
+    return GraphManager()
 
-@st.cache_resource
-def cached_idlookup():
-    return load_idlookup()
 
 graph = cached_graph()
-company_id_lookup = load_idlookup()
 st.write("company selection")
-selected_company = st_searchbox(lambda x: company_id_lookup.autocomplete_search(x))
+selected_company = st_searchbox(lambda x: graph.autocomplete_search(search_type="company", term=x))
 query = st.text_area("query", value=""" SELECT ?company ?value ?metricname ?year WHERE {
 <{id}> <{NS}Name> ?company .
 <{id}> <{NS}hasMetric> ?m .
@@ -27,7 +22,7 @@ query = st.text_area("query", value=""" SELECT ?company ?value ?metricname ?year
 submit = st.button("submit")
 
 if selected_company:
-    id = company_id_lookup[selected_company]
+    id = graph.get_company_id[selected_company]
     st.write(f"company id: {id.split('#')[1]}")
 
 
@@ -36,5 +31,3 @@ if submit and selected_company and query:
     query = query.replace("{NS}", NS)
     for row in graph.query(query):
         st.write(f"company {row['company'].value}  \nmetric {row['metricname']}  \nvalue {row['value'].value}  \nyear {row['year'].value}  \n\n")
-        # st.write(f"company {row['company'].value}")
-# st.write(get_emissions_by_name(graph, selected_company, company_id_lookup))

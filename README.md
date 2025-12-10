@@ -37,12 +37,14 @@ Report should showcase exploitation of people and planet, broken laws, corporate
 05/26 - Report
 
 Other Milestones:
-- UI
-- Joining other datasources in rdf (wikidata)
-- query translation
-- qlever integration
-- download schedule / overview
-- logging
+- [ ] UI
+- [ ] Joining other datasources in rdf (wikidata)
+- [ ] query translation
+- [ ] qlever integration
+- [x] download schedule / overview 
+- [ ] logging
+- [ ] source categorization & cost map
+- [ ] schema example diagram
 
 
 

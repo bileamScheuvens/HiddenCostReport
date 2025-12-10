@@ -53,13 +53,13 @@ async def download_metric(metric_name: str, metric_designer: str, task_id:int = 
     return task_id
 
 
-async def download_metrics(filename: str="", num_threads: int = 5):
+async def download_metrics(metrics_path: str="", num_threads: int = 5):
     """Download all metrics listed in supplied file."""
     overview_path = os.path.join(DATADIR, "metric_download_overview.csv")
 
     # create overview file for storing timestamps
     if not os.path.exists(overview_path):
-        overview = pd.read_csv(os.path.join(DATADIR, filename))
+        overview = pd.read_csv(metrics_path)
         overview = overview[["ID", "Metric Title", "Metric Designer"]]
         overview["download_timestamp"] = np.nan
         overview.to_csv(overview_path, index=False)

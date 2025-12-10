@@ -6,4 +6,3 @@ DATADIR = os.path.join(os.path.expanduser("~"), "data", "hiddencostreport")
 
 CURATEDMETRICPATHS = os.path.join(DATADIR, "metrics_curated.csv")
 GRAPHPATH = os.path.join(DATADIR, "graph")
-IDLOOKUPPATH = os.path.join(DATADIR, "company_id_lookup.json")

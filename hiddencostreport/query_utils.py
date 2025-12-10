@@ -1,24 +1,22 @@
 from .constants import NS
+from .harmonization import GraphManager
 
 
-def get_emissions_by_name(store, company, company_id_lookup={}):
-    id = company_id_lookup[company]
+def example_query(graph: GraphManager, company):
+    id = graph.get_company_id(company)
     query = f"""
-    SELECT ?company ?emissions ?year WHERE {{
+    SELECT ?company ?metric ?value ?year WHERE {{
     <{id}> <{NS}Name> ?company .
-    <{id}> <{NS}hasMetric> ?m .
-    ?m <{NS}Value> ?emissions .
-    ?m <{NS}Year> ?year .
+    <{id}> <{NS}hasMetric> ?obs .
+    ?obs <{NS}Value> ?value .
+    ?obs <{NS}Value> "No" .
+    ?obs <{NS}Year> ?year .
+    ?obs <{NS}Year> 2014 .
+    ?obs <{NS}MetricID> ?metrID .
+    ?metrID <{NS}MetricTitle> ?metric .
     }}
     """
-    return [f"{row['company'].value} {row['year'].value}" for row in store.query(query)]
+    return [f"{row['company'].value} {row['metric'].value} {row['value'].value} {row['year'].value}" for row in graph.query(query)]
 
 
-
-
-# store, company_id_lookup = build_graph()
-# store.optimize()
-# results = get_emissions_by_name(store,"nestle inc", company_id_lookup=company_id_lookup )
-
-# print("\n".join(results))
 
