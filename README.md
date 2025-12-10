@@ -52,7 +52,9 @@ Other Milestones:
 Repository of metrics and datasets linked to companies.
 
 #### Method of integration:
-CSVs parsed to rdf in schema from graph/schema.ttl
+CSVs parsed to rdf in schema from graph/schema.ttl.
+Metric automatically fetched from curated list.
+Curation on the basis of relevance, novelty (no derived metrics like emissions per employee) and objectivity (no self reported targets).
 
 
 

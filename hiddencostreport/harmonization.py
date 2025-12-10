@@ -1,5 +1,7 @@
 import re
 from collections import UserDict
+from .constants import IDLOOKUPPATH
+import json
 
 class CompanyIDLookup(UserDict):
     """Dict wrapper for harmonized company names."""
@@ -51,3 +53,11 @@ class CompanyIDLookup(UserDict):
         if self[clean_name] != value:
             raise ValueError(f"Naming conflict for {clean_name} derived from {key}. ID was {self[clean_name]}, trying to write {value}")
    
+    def save(self, path: str = IDLOOKUPPATH):
+        with open(IDLOOKUPPATH, 'w') as f:
+            f.write(json.dumps(self.data))
+
+    def load(self, path: str = IDLOOKUPPATH):
+        with open(IDLOOKUPPATH, 'r') as f:
+            self.data = json.loads(f.read())
+

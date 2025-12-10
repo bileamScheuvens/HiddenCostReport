@@ -1,16 +1,20 @@
 import streamlit as st
 from streamlit_searchbox import st_searchbox
 from hiddencostreport.query_utils import get_emissions_by_name
-from hiddencostreport.construct_graph import build_graph
+from hiddencostreport.construct_graph import load_graph, load_idlookup
 from hiddencostreport.constants import NS
 
 
 @st.cache_resource
-def get_graph():
-    graph, company_id_lookup = build_graph()
-    return graph, company_id_lookup
+def cached_graph():
+    return load_graph()
 
-graph, company_id_lookup = get_graph()
+@st.cache_resource
+def cached_idlookup():
+    return load_idlookup()
+
+graph = cached_graph()
+company_id_lookup = load_idlookup()
 st.write("company selection")
 selected_company = st_searchbox(lambda x: company_id_lookup.autocomplete_search(x))
 query = st.text_area("query", value=""" SELECT ?company ?value ?metricname ?year WHERE {

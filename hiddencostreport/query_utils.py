@@ -1,5 +1,3 @@
-
-from .construct_graph import build_graph
 from .constants import NS
 
 

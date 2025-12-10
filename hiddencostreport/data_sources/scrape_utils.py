@@ -3,7 +3,7 @@ import asyncio
 from asyncio import TaskGroup 
 from tqdm import tqdm
 from time import time
-from ..constants import DATADIR, ROOT
+from ..constants import DATADIR, ROOT, CURATEDMETRICPATHS
 import os
 import numpy as np
 import pandas as pd
@@ -39,7 +39,7 @@ async def download_metric(metric_name: str, metric_designer: str, task_id:int = 
         return
     
     # scrape until cursor is empty
-    cursor = Cursor(wikirate.get_answers, metric_name=metric_name, metric_designer=metric_designer)
+    cursor = Cursor(wikirate.get_answers, metric_name=metric_name, metric_designer=metric_designer, per_page=100)
     answers = []
     while cursor.has_next():
         answers += cursor.next()
@@ -48,7 +48,6 @@ async def download_metric(metric_name: str, metric_designer: str, task_id:int = 
     df = df[["id", "metric", "company", "value", "year"]]
     # write to file
     df.to_csv(outpath, index=False)
-
     
     # return task id for bookkeeping, if download was successful
     return task_id
@@ -84,6 +83,7 @@ async def download_metrics(filename: str="", num_threads: int = 5):
                 except StopIteration:
                     downloading = False
                     break
+                print(f"fetching {row['Metric Title']}")
                 tasks.append(tg.create_task(download_metric(task_id=task_id, metric_name=row["Metric Title"], metric_designer=row["Metric Designer"])))
 
             # wait until all tasks finished
@@ -98,4 +98,4 @@ async def download_metrics(filename: str="", num_threads: int = 5):
 
 
 if __name__ == "__main__":
-    asyncio.run(download_metrics("metrics_500.csv"))
+    asyncio.run(download_metrics(CURATEDMETRICPATHS))
