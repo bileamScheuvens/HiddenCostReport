@@ -2,7 +2,7 @@ import os
 from argparse import ArgumentParser
 from .construct_graph import construct_graph
 from .harmonization import GraphManager
-from .query_utils import get_emissions_by_name
+from .query_utils import example_query
 from streamlit import config as _config
 from streamlit.web.bootstrap import run
 
@@ -21,7 +21,7 @@ elif args.command == "ui":
     run(os.path.join("ui", "app.py"), args=[], flag_options=[], is_hello=False)
 elif args.command == "example_query":
     graph = GraphManager()
-    res = get_emissions_by_name(graph, "Nestle")
+    res = example_query(graph, "Nestle")
     print(*res, sep="\n")
 
 if args.interactive:
