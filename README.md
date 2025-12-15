@@ -45,6 +45,7 @@ Other Milestones:
 - [ ] logging
 - [ ] source categorization & cost map
 - [ ] schema example diagram
+- [ ] source selection on rebuild
 
 
 

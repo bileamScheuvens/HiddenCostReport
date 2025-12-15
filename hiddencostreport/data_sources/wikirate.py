@@ -3,11 +3,14 @@ import pandas as pd
 from pandas.core.series import Series
 import os
 from .scrape_utils import filename_encode
-from ..harmonization import GraphManager
 from ..constants import DATADIR, NS
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .graph_manager import GraphManager
 
 
-def parse_metrics(graph: GraphManager, filename: str = "metrics_500.csv"):
+def parse_metrics(graph: "GraphManager", filename: str = "metrics_500.csv"):
     """Parse metrics csv into rdf."""
     def _parse_metric_row(x: Series):
         # construct name with prefix M for metric
@@ -26,7 +29,7 @@ def parse_metrics(graph: GraphManager, filename: str = "metrics_500.csv"):
 
 
 
-def parse_companies(graph: GraphManager, filename: str = "companies_100.csv") -> None:
+def parse_companies(graph: "GraphManager", filename: str = "companies_100.csv") -> None:
     """Parse companies from csv to rdf and return lookup for id. """
     def _parse_company_row(x: Series):
         # construct name with prefix C for company
@@ -50,7 +53,7 @@ def parse_companies(graph: GraphManager, filename: str = "companies_100.csv") ->
 
 
 
-def parse_metric(graph: GraphManager, metric_name: str, metric_designer:str) -> None:
+def parse_metric(graph: "GraphManager", metric_name: str, metric_designer:str) -> None:
     """Parse individual metric into rdf."""
     def _parse_row(x: Series):
         if x["company"] not in graph.company_id_lookup:

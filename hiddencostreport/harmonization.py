@@ -1,8 +1,7 @@
 import re
 import os
 from collections import UserDict
-from .constants import DATADIR, GRAPHPATH
-from pyoxigraph import Store
+from .constants import DATADIR 
 
 import json
 
@@ -22,6 +21,7 @@ class IDLookup(UserDict):
             return
         with open(loadpath, 'r') as f:
             self.data = json.loads(f.read())
+    
 
 class CompanyIDLookup(IDLookup):
     """Dict wrapper for harmonized company names."""
@@ -49,16 +49,19 @@ class CompanyIDLookup(IDLookup):
             name = re.sub(pattern, sub, name)
         return name.strip()
 
-    def __contains__(self, key: str) -> bool:
-        return self.sanitize_name(key) in self.data
-
     def autocomplete_search(self, term: str) -> list[str]:
         term = self.sanitize_name(term)
         return [key for key in self.data if key.startswith(term)]
 
+    def __contains__(self, key: str) -> bool:
+        return self.sanitize_name(key) in self.data
+
     def __getitem__(self, key: str) -> str:
         return self.data[self.sanitize_name(key)]
 
+    def __len__(self):
+        return len(set(self.data.values()))
+    
     def __setitem__(self, key: str, value: str) -> None:
         clean_name = self.sanitize_name(key)
         # pass if entire name was santized away
@@ -82,53 +85,4 @@ class MetricIDLookup(IDLookup):
     def autocomplete_search(self, term: str) -> list[str]:
         return [key for key in self.data if key.startswith(term)]
 
-
-class GraphManager():
-    """Wrapper around graph store, which handles harmonized access and lookup tables."""
-
-    def __init__(self, *args, **kwargs):
-        self.store = Store(GRAPHPATH)
-        self.company_id_lookup = CompanyIDLookup()
-        self.company_id_lookup.load()
-        self.metric_id_lookup = MetricIDLookup()
-        self.metric_id_lookup.load()
-
-    def add(self, *args, **kwargs):
-        self.store.add(*args, **kwargs)
-
-    def load(self, *args, **kwargs):
-        self.store.load(*args, **kwargs)
-
-    def query(self, *args, **kwargs):
-        return self.store.query(*args, **kwargs)
-
-    def clear(self):
-        self.store.clear()
-
-    def __len__(self):
-        return len(self.store)
-
-    def autocomplete_search(self, search_type: str, term: str):
-        if search_type == "company":
-            return self.company_id_lookup.autocomplete_search(term)
-        elif search_type == "metric":
-            return self.metric_id_lookup.autocomplete_search(term)
-        else:
-            raise NotImplementedError()
-
-    def get_metric_id(self, metric_designer: str, metric_name: str) -> str:
-        return self.metric_id_lookup[f"{metric_designer}+{metric_name}"]
-
-    def set_metric_id(self, metric_designer: str, metric_name: str, id: str) -> None:
-        self.metric_id_lookup[f"{metric_designer}+{metric_name}"] = id
-    
-    def get_company_id(self, company_name: str) -> str:
-        return self.company_id_lookup[company_name]
-
-    def set_company_id(self, company_name: str, id: str) -> None:
-        self.company_id_lookup[company_name] = id
-
-    def save(self):
-        self.company_id_lookup.save()
-        self.metric_id_lookup.save()
 

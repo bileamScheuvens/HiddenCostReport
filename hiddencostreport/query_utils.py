@@ -1,5 +1,6 @@
 from .constants import NS
-from .harmonization import GraphManager
+from .graph_manager import GraphManager
+
 
 
 def example_query(graph: GraphManager, company):

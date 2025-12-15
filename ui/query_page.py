@@ -1,16 +1,11 @@
 import streamlit as st
 import pandas as pd
 from streamlit_searchbox import st_searchbox
-from hiddencostreport.harmonization import GraphManager
 from hiddencostreport.constants import NS
+from app import get_graph
 
 
-@st.cache_resource
-def cached_graph():
-    return GraphManager()
-
-
-graph = cached_graph()
+graph = get_graph()
 st.write("company selection")
 selected_company = st_searchbox(lambda x: graph.autocomplete_search(search_type="company", term=x))
 select = st.text_input("select", value="""\
