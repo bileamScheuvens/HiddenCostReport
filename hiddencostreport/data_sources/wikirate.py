@@ -2,15 +2,16 @@ from pyoxigraph import NamedNode, Literal, Quad, BlankNode
 import pandas as pd
 from pandas.core.series import Series
 import os
+from tqdm import tqdm
 from .scrape_utils import filename_encode
-from ..constants import DATADIR, NS
+from ..constants import DATADIR, NS, CURATEDMETRICPATHS
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .graph_manager import GraphManager
 
 
-def parse_metrics(graph: "GraphManager", filename: str = "metrics_500.csv"):
+def parse_metrics_metadata(graph: "GraphManager", filename: str = "metrics_500.csv"):
     """Parse metrics csv into rdf."""
     def _parse_metric_row(x: Series):
         # construct name with prefix M for metric
@@ -69,3 +70,7 @@ def parse_metric(graph: "GraphManager", metric_name: str, metric_designer:str) -
     df = pd.read_csv(os.path.join(DATADIR, "metrics", filename+".csv"))
     df.apply(_parse_row, axis=1)
 
+def parse_metrics(graph: "GraphManager", metrics_path: str = CURATEDMETRICPATHS) -> None:
+    metrics = pd.read_csv(metrics_path)
+    tqdm.pandas()
+    metrics.progress_apply(lambda row: parse_metric(graph, metric_designer=row["Metric Designer"], metric_name=row["Metric Title"]), axis=1)

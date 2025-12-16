@@ -1,13 +1,10 @@
 import os
 from .constants import GRAPHPATH
 from pyoxigraph import Store
-import pandas as pd
 from time import time
-from tqdm import tqdm
 from .constants import ROOT, CURATEDMETRICPATHS
-from .data_sources.wikirate import parse_companies, parse_metrics, parse_metric
+from .data_sources import SOURCES
 from .harmonization import CompanyIDLookup, MetricIDLookup
-from .data_sources.openproductsfacts import parse_productsfacts
 import pyoxigraph as pox
 
 
@@ -70,43 +67,24 @@ class GraphManager():
 
     def rebuild_graph(self, verbosity: int = 1, metrics_path: str = CURATEDMETRICPATHS) -> None:
         """Construct graph from all sources."""
-        # TODO: pass store to parse funcs directly instead of graphmanager
         # init store
         self.store.clear()
         start = time()
         
         # load schema
         with open(os.path.join(ROOT, "..", "graph", "schema.ttl")) as f:
-            self.load(f, pox.RdfFormat.TURTLE)
+            self.store.load(f, pox.RdfFormat.TURTLE)
         if verbosity:
             print(f"parsed schema after {time() - start}")
 
-        parse_companies(self)
+        for source in SOURCES:
+            if not source.active:
+                continue
+            source.parse(graph=self)
+            if verbosity:
+                print(f"parsed {source.name} after {time() - start} secs")
+
         self.save()
         if verbosity:
-            print(f"parsed companies after {time() - start}")
-
-        parse_metrics(self)
-        self.save()
-        if verbosity:
-            print(f"parsed metric metadata after {time() - start}")
-
-         
-
-        metrics = pd.read_csv(metrics_path)
-        tqdm.pandas()
-        metrics.progress_apply(lambda row: parse_metric(self, metric_designer=row["Metric Designer"], metric_name=row["Metric Title"]), axis=1)
-        
-        if verbosity:
-            print(f"parsed metrics after {time() - start}")
-        parse_productsfacts(self)
-        if verbosity:
-            print(f"parsed openproductsfacts emissions after {time() - start}")
             print(f"total graph size: {len(self)}")
-
-
-
-
-
-
 
