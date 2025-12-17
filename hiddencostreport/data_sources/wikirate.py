@@ -2,6 +2,7 @@ from pyoxigraph import NamedNode, Literal, Quad, BlankNode
 import pandas as pd
 from pandas.core.series import Series
 import os
+import networkx as nx
 from tqdm import tqdm
 from .scrape_utils import filename_encode
 from ..constants import DATADIR, NS, CURATEDMETRICPATHS
@@ -28,6 +29,22 @@ def parse_metrics_metadata(graph: "GraphManager", filename: str = "metrics_500.c
     metrics = pd.read_csv(os.path.join(DATADIR, filename))
     metrics.apply(_parse_metric_row, axis=1)
 
+def example_metrics_metadata() -> nx.DiGraph:
+    edges = {
+        "MetricDesigner": "<Metric Designer>",
+        "MetricTitle": "<Metric Title>",
+        "Question": "<Question>",
+        "Value Type": "<Value Type>",
+        "Unit": "<Unit>",
+    }
+    
+    G = nx.DiGraph()
+    center = "M<xxxxx>"
+    G.add_node(center)
+    for (p,o) in edges.items():
+        G.add_edge(center, o, label=p)
+    return G
+
 
 
 def parse_companies(graph: "GraphManager", filename: str = "companies_100.csv") -> None:
@@ -53,6 +70,19 @@ def parse_companies(graph: "GraphManager", filename: str = "companies_100.csv") 
     companies.apply(_parse_company_row, axis=1)
 
 
+def example_companies() -> nx.DiGraph:
+    edges = {
+        "Name": "<Name>",
+        "OpenCorporatesID": "<OpenCorporates ID>",
+    }
+    
+    G = nx.DiGraph()
+    center = "C<xxxxx>"
+    G.add_node(center)
+    for (p,o) in edges.items():
+        G.add_edge(center, o, label=p)
+    return G
+
 
 def parse_metric(graph: "GraphManager", metric_name: str, metric_designer:str) -> None:
     """Parse individual metric into rdf."""
@@ -69,6 +99,21 @@ def parse_metric(graph: "GraphManager", metric_name: str, metric_designer:str) -
     filename = filename_encode(metric_name=metric_name, metric_designer=metric_designer)
     df = pd.read_csv(os.path.join(DATADIR, "metrics", filename+".csv"))
     df.apply(_parse_row, axis=1)
+
+def example_metric() -> nx.DiGraph:
+    edges = {
+        "MetricID": "M<xxxx>",
+        "Year": "<Year>",
+        "Value": "<Value>",
+    }
+    
+    G = nx.DiGraph()
+    center = "BLANK"
+    G.add_node(center)
+    for (p,o) in edges.items():
+        G.add_edge(center, o, label=p)
+    G.add_edge("C<xxxx>", center, label="hasMetric")
+    return G
 
 def parse_metrics(graph: "GraphManager", metrics_path: str = CURATEDMETRICPATHS) -> None:
     metrics = pd.read_csv(metrics_path)
