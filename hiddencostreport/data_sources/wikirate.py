@@ -31,11 +31,11 @@ def parse_metrics_metadata(graph: "GraphManager", filename: str = "metrics_500.c
 
 def example_metrics_metadata() -> nx.DiGraph:
     edges = {
-        "MetricDesigner": "<Metric Designer>",
-        "MetricTitle": "<Metric Title>",
-        "Question": "<Question>",
-        "Value Type": "<Value Type>",
-        "Unit": "<Unit>",
+        "{NS}:MetricDesigner": "<Metric Designer>",
+        "{NS}:MetricTitle": "<Metric Title>",
+        "{NS}:Question": "<Question>",
+        "{NS}:ValueType": "<Value Type>",
+        "{NS}:Unit": "<Unit>",
     }
     
     G = nx.DiGraph()
@@ -72,8 +72,8 @@ def parse_companies(graph: "GraphManager", filename: str = "companies_100.csv") 
 
 def example_companies() -> nx.DiGraph:
     edges = {
-        "Name": "<Name>",
-        "OpenCorporatesID": "<OpenCorporates ID>",
+        "{NS}:Name": "<Name>",
+        "{NS}:OpenCorporatesID": "<OpenCorporates ID>",
     }
     
     G = nx.DiGraph()
@@ -102,9 +102,9 @@ def parse_metric(graph: "GraphManager", metric_name: str, metric_designer:str) -
 
 def example_metric() -> nx.DiGraph:
     edges = {
-        "MetricID": "M<xxxx>",
-        "Year": "<Year>",
-        "Value": "<Value>",
+        "{NS}:MetricID": "M<xxxx>",
+        "{NS}:Year": "<Year>",
+        "{NS}:Value": "<Value>",
     }
     
     G = nx.DiGraph()

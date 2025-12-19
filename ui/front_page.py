@@ -1,9 +1,8 @@
 import streamlit as st
+import streamlit.components.v1 as components
 from app import get_graph
 from hiddencostreport.data_sources import SOURCES
-import networkx as nx
-from pyvis import network 
-import matplotlib.pyplot as plt
+from pyvis.network import Network
 
 st.title("Hidden Cost Report")
 
@@ -16,15 +15,10 @@ for source in SOURCES:
     is_active = row.toggle(label=source.name, value=True)
     source.active = is_active
     if source.example is not None:
-        show_example = row.button("Show schema", key=source.name)
-        if show_example:
-            G = source.example
-            fig, ax = plt.subplots()
-            pos = nx.spring_layout(G)
-            fig = nx.draw(G, pos, with_labels=True)
-            nx.draw_networkx_edge_labels(G, pos, edge_labels=nx.get_edge_attributes(G, "label"))
-            st.pyplot(fig)
-
+        with st.expander("Show schema"):
+            G = Network(height='600px', width='100%', directed=True)
+            G.from_nx(source.example)
+            components.html(G.generate_html(f"{source.name}.html"), height=600)
 
 
 
@@ -35,5 +29,4 @@ if rebuild_button:
         graph.rebuild_graph()
 
 st.write(graph.graph_summary())
-
 
