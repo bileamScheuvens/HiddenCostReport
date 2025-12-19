@@ -44,8 +44,9 @@ Other Milestones:
 - [x] download schedule / overview 
 - [ ] logging
 - [ ] source categorization & cost map
-- [ ] schema example diagram
-- [ ] source selection on rebuild
+- [x] schema example diagram
+- [x] source selection on rebuild
+- [ ] decide when to write report
 
 
 
