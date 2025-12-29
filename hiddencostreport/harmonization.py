@@ -71,7 +71,7 @@ class CompanyIDLookup(IDLookup):
         if clean_name not in self.data:
             self.data[clean_name] = value
             return
-            
+
         # handle attempted overwrite with different key. Indicates collision
         if self[clean_name] != value:
             raise ValueError(f"Naming conflict for {clean_name} derived from {key}. ID was {self[clean_name]}, trying to write {value}")
@@ -85,4 +85,55 @@ class MetricIDLookup(IDLookup):
     def autocomplete_search(self, term: str) -> list[str]:
         return [key for key in self.data if key.startswith(term)]
 
+
+class CategoryMapper():
+
+    def emission_metrics(self, metric_designer, metric_title, questions, value_type, **kwargs):
+        if value_type != "Number":
+            return False
+        if "emission" not in metric_title.lower():
+            return False
+        # TODO treat scopes
+        return "emission"
+
+
+    def water_metrics(self, metric_designer, metric_title, questions, value_type, **kwargs):
+        if value_type != "Number":
+            return False
+        if not any(x in metric_title.lower() for x in ["water"]):
+            return False
+        # TODO: treat recycled 
+        return "water"
+
+    def electricity_metrics(self, metric_designer, metric_title, questions, value_type, **kwargs):
+        if value_type != "Number":
+            return False
+        if not any(x in metric_title.lower() for x in ["electricity", "energy", "power"]):
+            return False
+        return "electricity"
+
+    def waste_metrics(self, metric_designer, metric_title, questions, value_type, **kwargs):
+        if value_type != "Number":
+            return False
+        if not any(x in metric_title.lower() for x in ["waste"]):
+            return False
+        # TODO: treat recycled
+        return "waste"
+    
+    def disclosure_metrics(self, metric_designer, metric_title, questions, value_type, **kwargs):
+        if isinstance(metric_title, float):
+            return False
+        if not any(x in metric_title.lower() for x in ["disclos"]):
+            return False
+        if value_type == "Number":
+            return "disclosure_rate"
+        else:
+            return "disclosure_single"
+
+    def assign_category(self, **kwargs):
+        for mapper in [self.disclosure_metrics, self.emission_metrics, self.water_metrics, self.electricity_metrics, self.waste_metrics]:
+            res = mapper(**kwargs)
+            if res:
+                return res
+        return "unmapped"
 
