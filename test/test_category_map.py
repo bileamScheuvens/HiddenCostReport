@@ -18,4 +18,4 @@ def test_metric_coverage(request):
     grouped = df.groupby("category")["ID"].count()
     
 
-    request.config.hello = str(grouped)
+    request.config.metric_coverage = str(grouped)

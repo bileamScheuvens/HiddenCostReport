@@ -1,6 +1,6 @@
 import re
 import os
-from collections import UserDict
+from collections import UserDict, defaultdict
 from .constants import DATADIR 
 
 import json
@@ -87,6 +87,31 @@ class MetricIDLookup(IDLookup):
 
 
 class CategoryMapper():
+    # TODO: rewrite as function
+
+    def gri_to_trueprice(self, gri_designation: str):
+        mapping = {
+                # 305 Emissions
+                "305-1": "climate",
+                "305-2": "climate",
+                "305-3": "climate",
+                "305-6": "airp_ozone",
+                # 306 waste 
+                "306-1": "airp_ozone",
+                # 408 child labor (only disclosure)
+                # "408-1": "cl_haz",
+                # 409 forced labor (only disclosure)
+                # "409-1": "fl_workers_med",
+                }
+        mapping_default = defaultdict(lambda: None)
+        for k,v in mapping:
+            mapping_default[k] = v
+
+
+    def derived_metrics(self, metric_designer, metric_title, questions, value_type, **kwargs):
+        if not any(x in metric_title.lower() for x in ["per", "yearly change"]):
+            return False
+        return "derived"
 
     def emission_metrics(self, metric_designer, metric_title, questions, value_type, **kwargs):
         if value_type != "Number":
@@ -103,14 +128,14 @@ class CategoryMapper():
         if not any(x in metric_title.lower() for x in ["water"]):
             return False
         # TODO: treat recycled 
-        return "water"
+        return "water_usage"
 
     def electricity_metrics(self, metric_designer, metric_title, questions, value_type, **kwargs):
         if value_type != "Number":
             return False
         if not any(x in metric_title.lower() for x in ["electricity", "energy", "power"]):
             return False
-        return "electricity"
+        return "electricity_consumption"
 
     def waste_metrics(self, metric_designer, metric_title, questions, value_type, **kwargs):
         if value_type != "Number":
@@ -136,4 +161,6 @@ class CategoryMapper():
             if res:
                 return res
         return "unmapped"
+
+
 

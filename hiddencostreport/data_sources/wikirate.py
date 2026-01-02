@@ -6,6 +6,7 @@ import networkx as nx
 from tqdm import tqdm
 from .scrape_utils import filename_encode
 from ..constants import DATADIR, NS, CURATEDMETRICPATHS
+from ..harmonization import CategoryMapper
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -14,14 +15,23 @@ if TYPE_CHECKING:
 
 def parse_metrics_metadata(graph: "GraphManager", filename: str = "metrics_500.csv"):
     """Parse metrics csv into rdf."""
+
+    category_mapper = CategoryMapper()
     def _parse_metric_row(x: Series):
         # construct name with prefix M for metric
         id = NS + "M" + x["ID"][1:]
         metric = NamedNode(id)
+        category = category_mapper.assign_category(
+            metric_designer=x["Metric Designer"],
+            metric_title=x["Metric Title"],
+            questions=x["Questions"],
+            value_type=x["Value Type"],
+        )
         graph.set_metric_id(metric_designer=x["Metric Designer"], metric_name=x["Metric Title"], id=id)
 
         graph.add(Quad(metric, NamedNode(NS+"MetricDesigner"), Literal(x["Metric Designer"])))
         graph.add(Quad(metric, NamedNode(NS+"MetricTitle"), Literal(x["Metric Title"])))
+        graph.add(Quad(metric, NamedNode(NS+"MetricCategory"), Literal(category)))
         graph.add(Quad(metric, NamedNode(NS+"Questions"), Literal(x["Questions"])))
         graph.add(Quad(metric, NamedNode(NS+"ValueType"), Literal(x["Value Type"])))
         graph.add(Quad(metric, NamedNode(NS+"Unit"), Literal(x["Unit"])))
@@ -32,6 +42,7 @@ def parse_metrics_metadata(graph: "GraphManager", filename: str = "metrics_500.c
 def example_metrics_metadata() -> nx.DiGraph:
     edges = {
         "{NS}:MetricDesigner": "<Metric Designer>",
+        "{NS}:MetricCategory": "<Metric Category>",
         "{NS}:MetricTitle": "<Metric Title>",
         "{NS}:Question": "<Question>",
         "{NS}:ValueType": "<Value Type>",
