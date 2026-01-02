@@ -354,6 +354,18 @@ files = [
 ]
 
 [[package]]
+name = "et-xmlfile"
+version = "2.0.0"
+description = "An implementation of lxml.xmlfile for the standard library"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "et_xmlfile-2.0.0-py3-none-any.whl", hash = "sha256:7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa"},
+    {file = "et_xmlfile-2.0.0.tar.gz", hash = "sha256:dab3f4764309081ce75662649be815c4c9081e88f0837825f90fd28317d4da54"},
+]
+
+[[package]]
 name = "executing"
 version = "2.2.1"
 description = "Get the currently executing AST node of a frame, and other information"
@@ -367,6 +379,42 @@ files = [
 
 [package.extras]
 tests = ["asttokens (>=2.1.0)", "coverage", "coverage-enable-subprocess", "ipython", "littleutils", "pytest", "rich ; python_version >= \"3.11\""]
+
+[[package]]
+name = "flexcache"
+version = "0.3"
+description = "Saves and loads to the cache a transformed versions of a source object."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "flexcache-0.3-py3-none-any.whl", hash = "sha256:d43c9fea82336af6e0115e308d9d33a185390b8346a017564611f1466dcd2e32"},
+    {file = "flexcache-0.3.tar.gz", hash = "sha256:18743bd5a0621bfe2cf8d519e4c3bfdf57a269c15d1ced3fb4b64e0ff4600656"},
+]
+
+[package.dependencies]
+typing-extensions = "*"
+
+[package.extras]
+test = ["pytest", "pytest-cov", "pytest-mpl", "pytest-subtests"]
+
+[[package]]
+name = "flexparser"
+version = "0.4"
+description = "Parsing made fun ... using typing."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "flexparser-0.4-py3-none-any.whl", hash = "sha256:3738b456192dcb3e15620f324c447721023c0293f6af9955b481e91d00179846"},
+    {file = "flexparser-0.4.tar.gz", hash = "sha256:266d98905595be2ccc5da964fe0a2c3526fbbffdc45b65b3146d75db992ef6b2"},
+]
+
+[package.dependencies]
+typing-extensions = "*"
+
+[package.extras]
+test = ["pytest", "pytest-cov", "pytest-mpl", "pytest-subtests"]
 
 [[package]]
 name = "fonttools"
@@ -1095,6 +1143,21 @@ files = [
 ]
 
 [[package]]
+name = "openpyxl"
+version = "3.1.5"
+description = "A Python library to read/write Excel 2010 xlsx/xlsm files"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "openpyxl-3.1.5-py2.py3-none-any.whl", hash = "sha256:5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2"},
+    {file = "openpyxl-3.1.5.tar.gz", hash = "sha256:cf0e3cf56142039133628b5acffe8ef0c12bc902d2aadd3e0fe5878dc08d1050"},
+]
+
+[package.dependencies]
+et-xmlfile = "*"
+
+[[package]]
 name = "packaging"
 version = "25.0"
 description = "Core utilities for Python packages"
@@ -1342,6 +1405,57 @@ mic = ["olefile"]
 test-arrow = ["arro3-compute", "arro3-core", "nanoarrow", "pyarrow"]
 tests = ["check-manifest", "coverage (>=7.4.2)", "defusedxml", "markdown2", "olefile", "packaging", "pyroma (>=5)", "pytest", "pytest-cov", "pytest-timeout", "pytest-xdist", "trove-classifiers (>=2024.10.12)"]
 xmp = ["defusedxml"]
+
+[[package]]
+name = "pint"
+version = "0.25.2"
+description = "Physical quantities module"
+optional = false
+python-versions = ">=3.11"
+groups = ["main"]
+files = [
+    {file = "pint-0.25.2-py3-none-any.whl", hash = "sha256:ca35ab1d8eeeb6f7d9942b3cb5f34ca42b61cdd5fb3eae79531553dcca04dda7"},
+    {file = "pint-0.25.2.tar.gz", hash = "sha256:85a45d1da8fe9c9f7477fed8aef59ad2b939af3d6611507e1a9cbdacdcd3450a"},
+]
+
+[package.dependencies]
+flexcache = ">=0.3"
+flexparser = ">=0.4"
+platformdirs = ">=2.1.0"
+typing-extensions = ">=4.0.0"
+
+[package.extras]
+all = ["babel (<=2.8)", "dask (<2025.3.0)", "matplotlib", "mip (>=1.13) ; python_version < \"3.13\"", "numpy (>=1.23)", "pint-pandas (>=0.3)", "uncertainties (>=3.1.6)", "xarray"]
+babel = ["babel (<=2.8)"]
+codspeed = ["pytest", "pytest-benchmark", "pytest-codspeed", "pytest-cov", "pytest-mpl", "pytest-subtests"]
+dask = ["dask (<2025.3.0)"]
+docs = ["babel", "commonmark (==0.8.1)", "currencyconverter", "docutils", "graphviz", "ipykernel", "ipython (<=8.12)", "jupyter-client", "nbsphinx", "pooch", "pygments (>=2.4)", "recommonmark (==0.5.0)", "sciform", "scipy", "serialize", "sparse", "sphinx (>=6,<8.2)", "sphinx-book-theme (>=1.1.0)", "sphinx-copybutton", "sphinx-design"]
+matplotlib = ["matplotlib"]
+mip = ["mip (>=1.13) ; python_version < \"3.13\""]
+numpy = ["numpy (>=1.23)"]
+pandas = ["pint-pandas (>=0.3)"]
+test = ["pytest", "pytest-benchmark", "pytest-cov", "pytest-subtests"]
+test-all = ["pytest", "pytest-benchmark", "pytest-cov", "pytest-mpl", "pytest-subtests"]
+test-mpl = ["pytest-mpl"]
+uncertainties = ["uncertainties (>=3.1.6)"]
+xarray = ["xarray"]
+
+[[package]]
+name = "platformdirs"
+version = "4.5.1"
+description = "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`."
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "platformdirs-4.5.1-py3-none-any.whl", hash = "sha256:d03afa3963c806a9bed9d5125c8f4cb2fdaf74a55ab60e5d59b3fde758104d31"},
+    {file = "platformdirs-4.5.1.tar.gz", hash = "sha256:61d5cdcc6065745cdd94f0f878977f8de9437be93de97c1c12f853c9c0cdcbda"},
+]
+
+[package.extras]
+docs = ["furo (>=2025.9.25)", "proselint (>=0.14)", "sphinx (>=8.2.3)", "sphinx-autodoc-typehints (>=3.2)"]
+test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest (>=8.4.2)", "pytest-cov (>=7)", "pytest-mock (>=3.15.1)"]
+type = ["mypy (>=1.18.2)"]
 
 [[package]]
 name = "pluggy"
@@ -2343,4 +2457,4 @@ test = ["html2text", "mock", "nose", "python-dotenv", "vcrpy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "a2b668d1ab2cb68c4b16af528eafa36e28f13ff124e1430b519e5c94b9696518"
+content-hash = "741df0813c29d57ef3581904a0af67ed66aba049275d60beb4008a994843ff21"
