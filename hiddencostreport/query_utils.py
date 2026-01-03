@@ -20,15 +20,10 @@ def example_query(graph: GraphManager, company):
     """
     return [f"{row['company'].value} {row['metric'].value} {row['value'].value} {row['year'].value}" for row in graph.query(query)]
 
-
-def get_true_cost(graph: GraphManager, company: str, year: int):
-    cost_calculator = TrueCostCalculator()
-
-    id = graph.get_company_id(company)
-    query = f"""
+def query_get_metrics(company_id: str, year: int):
+    return f"""
     SELECT ?metrictitle ?metriccategory ?unit ?metricdesigner ?value WHERE {{
-    <{id}> <{NS}Name> ?company .
-    <{id}> <{NS}hasMetric> ?obs .
+    <{company_id}> <{NS}hasMetric> ?obs .
     ?obs <{NS}Value> ?value .
     ?obs <{NS}Year> {year} .
     ?obs <{NS}MetricID> ?metrID .
@@ -38,6 +33,12 @@ def get_true_cost(graph: GraphManager, company: str, year: int):
     ?metrID <{NS}MetricDesigner> ?metricdesigner .
     }}
     """
+
+def get_true_cost(graph: GraphManager, company: str, year: int):
+    cost_calculator = TrueCostCalculator()
+
+    id = graph.get_company_id(company)
+    query = query_get_metrics(company_id=id, year=year)
     cost_lb, cost_ub = 0, 0
     for row in graph.query(query):
         bounds = cost_calculator.get_cost(
