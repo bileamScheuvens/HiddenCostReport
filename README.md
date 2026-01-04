@@ -21,8 +21,6 @@ Report should showcase exploitation of people and planet, broken laws, corporate
 
 
 
-
-
 ## Prototype scope:
 100 Companies (most data points as of 11/25)
 500 Metrics (with environmental tag, most bookmarked as of 11/25)
@@ -47,6 +45,7 @@ Other Milestones:
 - [x] schema example diagram
 - [x] source selection on rebuild
 - [ ] decide when to write report
+- [ ] knowledge graph evaluation 
 
 
 
@@ -60,6 +59,13 @@ CSVs parsed to rdf in schema from graph/schema.ttl.
 Metric automatically fetched from curated list.
 Curation on the basis of relevance, novelty (no derived metrics like emissions per employee) and objectivity (no self reported targets).
 
+### TruePriceMethod
+Elaborate reports for true price of different goods in agriculture. Based in NL. Published their method with excel table of cost corresponding to finely granular metrics.
+
+#### Method of integration
+Their true prices are highly reliable but require detailed data, which is not provided by the publicly available sources.
+Some GRI (global reporting intiative) categories can be translated to trueprice categories. Even then the available data is often just boolean disclosure rather than e.g. concrete 'number of years of forced labor under hazardous condition'.
+Manual mapping of standards required.
 
 
 ### OpenProductsFacts
@@ -75,7 +81,5 @@ Columns used:
 - brands_en
 - ingredients_tags
 - manufacturing_places
-
-
 
 

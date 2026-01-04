@@ -1,4 +1,4 @@
 def pytest_terminal_summary(terminalreporter, exitstatus, config):
+    """Use terminal summary hook to print metric coverage."""
     terminalreporter.ensure_newline()
-    x = getattr(config, "metric_coverage", "")
-    terminalreporter.write(x+"\n")
+    terminalreporter.write(f"{getattr(config, "metric_coverage", "")}\n")

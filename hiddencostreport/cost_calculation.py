@@ -29,6 +29,7 @@ class TrueCostCalculator():
             return "invalid"
 
     def get_cost(self, metric_title: str, metric_category: str, metric_unit: str, metric_value: str):
+        # TODO: resolve emission scopes. Not sure where this should take place
         if metric_category not in self.cost_table.index:
             # TODO: maybe warn or log?
             return 0,0

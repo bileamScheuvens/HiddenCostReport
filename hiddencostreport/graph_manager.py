@@ -19,15 +19,19 @@ class GraphManager():
         self.metric_id_lookup.load()
 
     def add(self, *args, **kwargs):
+        """Passthrough to store."""
         self.store.add(*args, **kwargs)
 
     def load(self, *args, **kwargs):
+        """Passthrough to store."""
         self.store.load(*args, **kwargs)
 
     def query(self, *args, **kwargs):
+        """Passthrough to store."""
         return self.store.query(*args, **kwargs)
 
     def clear(self):
+        """Passthrough to store."""
         self.store.clear()
 
     def __len__(self):

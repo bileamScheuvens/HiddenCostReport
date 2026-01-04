@@ -12,10 +12,12 @@ class IDLookup(UserDict):
         self.filename = filename
 
     def save(self):
+        """Serialize store."""
         with open(os.path.join(DATADIR, f"{self.filename}.json"), 'w') as f:
             f.write(json.dumps(self.data))
 
     def load(self):
+        """Load serialized store."""
         loadpath = os.path.join(DATADIR, f"{self.filename}.json")
         if not os.path.exists(loadpath):
             return
@@ -90,6 +92,7 @@ class CategoryMapper():
     # TODO: rewrite as function?
 
     def gri_to_trueprice(self, gri_designation: str):
+        """(incomplete) manual mapping of global reporting initiative scores to trueprice categories."""
         mapping = {
                 # 305 Emissions
                 "305-1": "climate",

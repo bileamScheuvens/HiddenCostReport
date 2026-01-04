@@ -7,6 +7,11 @@ if TYPE_CHECKING:
 
 
 class Source:
+    """
+    Representation of single source for knowledge graph.
+    Should provide name, description, and ideally schema by example of how a data point relates to the rest of the graph.
+    Parse func should take graph manager and parse serialized or live data into rdf.
+    """
 
     def __init__(self, name: str, parse_func: callable, active: bool = True, desc: str = "", example: nx.DiGraph = None, **load_kwargs):
         self.name = name

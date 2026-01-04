@@ -6,6 +6,7 @@ import pytest
 
 
 def test_metric_coverage(request):
+    """Test metric coverage by mapping all metrics to their category and printing distribution."""
     df = pd.read_csv(os.path.join(DATADIR, "metrics_500.csv"))
     df["category"] = df.apply(lambda row: CategoryMapper().assign_category(
         metric_designer=row["Metric Designer"],
@@ -19,3 +20,4 @@ def test_metric_coverage(request):
     
 
     request.config.metric_coverage = str(grouped)
+    # TODO: set threshhold for unmapped?
