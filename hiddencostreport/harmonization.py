@@ -87,7 +87,7 @@ class MetricIDLookup(IDLookup):
 
 
 class CategoryMapper():
-    # TODO: rewrite as function
+    # TODO: rewrite as function?
 
     def gri_to_trueprice(self, gri_designation: str):
         mapping = {
@@ -108,47 +108,69 @@ class CategoryMapper():
             mapping_default[k] = v
 
 
+    def _match_terms(self, target: str | float, terms: list[str]):
+        """Shorthand for checking if target contains terms."""
+        # Skip if target is NaN
+        if isinstance(target, float):
+            return False
+        return any(term in target.lower() for term in terms)
+
     def derived_metrics(self, metric_designer, metric_title, questions, value_type, **kwargs):
-        if not any(x in metric_title.lower() for x in ["per", "yearly change"]):
+        if not self._match_terms(metric_title, ["per", "yearly change"]):
             return False
         return "derived"
 
     def emission_metrics(self, metric_designer, metric_title, questions, value_type, **kwargs):
         if value_type != "Number":
             return False
-        if "emission" not in metric_title.lower():
+        if not self._match_terms(metric_title, ["emission"]):
             return False
-        # TODO treat scopes
-        return "emission"
+        category = "emission"
+        if self._match_terms(metric_title, ["scope"]):
+            category += "_scope_"
+            for scope in ["1","2","3"]:
+                if scope in metric_title:
+                    category += scope
+        return category
 
 
     def water_metrics(self, metric_designer, metric_title, questions, value_type, **kwargs):
         if value_type != "Number":
+            return False 
+        if not self._match_terms(metric_title, ["water"]):
             return False
-        if not any(x in metric_title.lower() for x in ["water"]):
-            return False
-        # TODO: treat recycled 
-        return "water_usage"
+        category = "water"
+        if self._match_terms(metric_title, ["withdrawal"]):
+            category += "_withdrawal"
+        if self._match_terms(metric_title, ["recycled"]):
+            category += "_recycled"
+        return category
 
     def electricity_metrics(self, metric_designer, metric_title, questions, value_type, **kwargs):
         if value_type != "Number":
             return False
-        if not any(x in metric_title.lower() for x in ["electricity", "energy", "power"]):
+        if not self._match_terms(metric_title, ["electricity", "energy", "power"]):
             return False
         return "electricity_consumption"
 
     def waste_metrics(self, metric_designer, metric_title, questions, value_type, **kwargs):
         if value_type != "Number":
             return False
-        if not any(x in metric_title.lower() for x in ["waste"]):
+        if not self._match_terms(metric_title, ["waste"]):
             return False
-        # TODO: treat recycled
-        return "waste"
+        category = "waste"
+        if self._match_terms(metric_title, ["non-hazardous"]):
+            category += "_nonhazardous"
+        elif self._match_terms(metric_title, ["hazardous"]):
+            category += "_hazardous"
+        if self._match_terms(metric_title, ["recycled"]):
+            category += "_recycled"
+        return category
     
     def disclosure_metrics(self, metric_designer, metric_title, questions, value_type, **kwargs):
         if isinstance(metric_title, float):
             return False
-        if not any(x in metric_title.lower() for x in ["disclos"]):
+        if not (self._match_terms(metric_title, ["disclos"]) or self._match_terms(questions, ["disclos"])):
             return False
         if value_type == "Number":
             return "disclosure_rate"
@@ -156,7 +178,7 @@ class CategoryMapper():
             return "disclosure_single"
 
     def assign_category(self, **kwargs):
-        for mapper in [self.disclosure_metrics, self.emission_metrics, self.water_metrics, self.electricity_metrics, self.waste_metrics]:
+        for mapper in [self.derived_metrics, self.disclosure_metrics, self.emission_metrics, self.water_metrics, self.electricity_metrics, self.waste_metrics]:
             res = mapper(**kwargs)
             if res:
                 return res
