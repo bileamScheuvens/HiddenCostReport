@@ -34,6 +34,23 @@ def query_get_metrics(company_id: str, year: int):
     }}
     """
 
+def query_transparent_company():
+    return f"""
+    SELECT ?company (COUNT(DISTINCT ?metric_category) AS ?metric_count) ?year WHERE {{
+    ?companyID <{NS}Name> ?company .
+    ?companyID <{NS}hasMetric> ?obs .
+
+    VALUES ?metric_category {{ "emission_scope1" "waste" "water" "electricity_consumption" "emission" }}
+    ?obs <{NS}Value> ?value .
+    ?obs <{NS}Year> ?year .
+    ?obs <{NS}MetricID> ?metrID .
+    ?metrID <{NS}MetricTitle> ?metric_title .
+    ?metrID <{NS}MetricCategory> ?metric_category .
+    }}
+    GROUP BY ?company ?year 
+    HAVING (COUNT(DISTINCT ?metric_category) > 3)
+    """
+
 def get_true_cost(graph: GraphManager, company: str, year: int):
     cost_calculator = TrueCostCalculator()
 

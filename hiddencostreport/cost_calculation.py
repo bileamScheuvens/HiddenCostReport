@@ -13,7 +13,9 @@ class TrueCostCalculator():
         self.substitution_rules = {
                 r"metric\s*": "",
                 r"\s*of\s*": "",
-                r"co2\s*(equivalent|eq\.?)?": "", # co2 eq./equivalent
+                r"_?co2\s*(equivalent|eq\.?)?": "", # co2 eq./equivalent
+                r"kwh": "kilowatt_hour", 
+                r"m3": "m^3", 
         }
 
 
@@ -34,7 +36,7 @@ class TrueCostCalculator():
             # TODO: maybe warn or log?
             return 0,0
         unit = self.sanitize_unit(metric_unit)
-        if unit == "invalid":
+        if unit == "invalid" or not isinstance(unit, pint.Quantity):
             return 0,0
 
         # TODO: move this check in some util function

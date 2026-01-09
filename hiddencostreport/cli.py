@@ -1,7 +1,7 @@
 import os
 from argparse import ArgumentParser
 from .graph_manager import GraphManager
-from .query_utils import example_query, get_true_cost
+from .query_utils import example_query, get_true_cost, query_transparent_company
 from streamlit import config as _config
 from streamlit.web.bootstrap import run
 from .data_sources.truepricemethod import read_costs
@@ -31,6 +31,8 @@ elif args.command == "example_query":
     graph = GraphManager()
     res = example_query(graph, "Nestle")
     print(*res, sep="\n")
+    # res = graph.query(query_transparent_company())
+    # print(*[x["company"].value + " " + str(x["year"].value) for x in res], sep="\n")
 elif args.command == "example_cost":
     graph = GraphManager()
     res = get_true_cost(graph, "Nestle", 2022)
