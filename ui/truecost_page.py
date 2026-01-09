@@ -11,11 +11,13 @@ graph = get_graph()
 cost_calculator = TrueCostCalculator()
 
 st.write("Select company and year for true cost calculation:")
-company_col, year_col = st.columns([5,1], vertical_alignment="top")
+company_col, year_col = st.columns([5, 1], vertical_alignment="top")
 
 with company_col:
     st.space()
-    selected_company = st_searchbox(lambda x: graph.autocomplete_search(search_type="company", term=x))
+    selected_company = st_searchbox(
+        lambda x: graph.autocomplete_search(search_type="company", term=x)
+    )
     if selected_company:
         id = graph.get_company_id(selected_company)
 
@@ -23,14 +25,11 @@ with year_col:
     year = st.selectbox("year", range(2025, 1970, -1), label_visibility="hidden")
 
 
-
 if selected_company and year:
     id = graph.get_company_id(selected_company)
-    
 
     # TODO: rewrite as tree?
     category_to_cost = defaultdict(list)
-    
 
     for row in graph.query(query_get_metrics(company_id=id, year=year)):
         category = row["metriccategory"].value
@@ -41,13 +40,5 @@ if selected_company and year:
             metric_unit=row["unit"].value,
             metric_value=row["value"].value,
         )
-        category_to_cost[category].append((title,lb,ub))
+        category_to_cost[category].append((title, lb, ub))
     st.plotly_chart(cost_sunburst(category_to_cost))
-
-
-
-
-
-
-
-

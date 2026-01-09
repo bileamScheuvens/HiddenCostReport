@@ -8,7 +8,7 @@ from .harmonization import CompanyIDLookup, MetricIDLookup
 import pyoxigraph as pox
 
 
-class GraphManager():
+class GraphManager:
     """Wrapper around graph store, which handles harmonized access and lookup tables."""
 
     def __init__(self, *args, **kwargs):
@@ -39,11 +39,10 @@ class GraphManager():
 
     def graph_summary(self):
         return {
-                "Triples": len(self),
-                "Companies": len(self.company_id_lookup),
-                "Metrics": len(self.metric_id_lookup),
-                }
-
+            "Triples": len(self),
+            "Companies": len(self.company_id_lookup),
+            "Metrics": len(self.metric_id_lookup),
+        }
 
     def autocomplete_search(self, search_type: str, term: str):
         if search_type == "company":
@@ -58,7 +57,7 @@ class GraphManager():
 
     def set_metric_id(self, metric_designer: str, metric_name: str, id: str) -> None:
         self.metric_id_lookup[f"{metric_designer}+{metric_name}"] = id
-    
+
     def get_company_id(self, company_name: str) -> str:
         return self.company_id_lookup[company_name]
 
@@ -69,12 +68,14 @@ class GraphManager():
         self.company_id_lookup.save()
         self.metric_id_lookup.save()
 
-    def rebuild_graph(self, verbosity: int = 1, metrics_path: str = CURATEDMETRICPATHS) -> None:
+    def rebuild_graph(
+        self, verbosity: int = 1, metrics_path: str = CURATEDMETRICPATHS
+    ) -> None:
         """Construct graph from all sources."""
         # init store
         self.store.clear()
         start = time()
-        
+
         # load schema
         with open(os.path.join(ROOT, "..", "graph", "schema.ttl")) as f:
             self.store.load(f, pox.RdfFormat.TURTLE)
@@ -91,4 +92,3 @@ class GraphManager():
         self.save()
         if verbosity:
             print(f"total graph size: {len(self)}")
-

@@ -7,14 +7,19 @@ from streamlit.web.bootstrap import run
 from .data_sources.truepricemethod import read_costs
 
 parser = ArgumentParser(prog="HiddenCostReport")
-parser.add_argument("command", default="ui", choices=[
-    "ui",
-    "rebuild",
-    "test_mapping",
-    "example_query", 
-    "example_cost",
-    "stats",
-    ], help="Action to be performed.")
+parser.add_argument(
+    "command",
+    default="ui",
+    choices=[
+        "ui",
+        "rebuild",
+        "test_mapping",
+        "example_query",
+        "example_cost",
+        "stats",
+    ],
+    help="Action to be performed.",
+)
 parser.add_argument("-v", "--verbose", default=0, action="count", dest="verbosity")
 parser.add_argument("-i", "--interactive", dest="interactive", action="store_true")
 
@@ -46,5 +51,3 @@ elif args.command == "test_mapping":
 
 if args.interactive:
     os.environ["PYTHONINSPECT"] = "TRUE"
-
-

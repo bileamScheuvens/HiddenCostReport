@@ -16,10 +16,9 @@ for source in SOURCES:
     source.active = is_active
     if source.example is not None:
         with st.expander("Show schema"):
-            G = Network(height='600px', width='100%', directed=True)
+            G = Network(height="600px", width="100%", directed=True)
             G.from_nx(source.example)
             components.html(G.generate_html(f"{source.name}.html"), height=600)
-
 
 
 rebuild_button = st.button("Rebuild Graph")
@@ -29,4 +28,3 @@ if rebuild_button:
         graph.rebuild_graph()
 
 st.write(graph.graph_summary())
-

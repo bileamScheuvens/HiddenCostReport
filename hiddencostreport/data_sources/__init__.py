@@ -1,7 +1,15 @@
-from .wikirate import parse_companies, parse_metrics_metadata, parse_metrics, example_metrics_metadata, example_metric, example_companies
+from .wikirate import (
+    parse_companies,
+    parse_metrics_metadata,
+    parse_metrics,
+    example_metrics_metadata,
+    example_metric,
+    example_companies,
+)
 from .openproductsfacts import parse_productsfacts
 import networkx as nx
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from .graph_manager import GraphManager
 
@@ -13,7 +21,15 @@ class Source:
     Parse func should take graph manager and parse serialized or live data into rdf.
     """
 
-    def __init__(self, name: str, parse_func: callable, active: bool = True, desc: str = "", example: nx.DiGraph = None, **load_kwargs):
+    def __init__(
+        self,
+        name: str,
+        parse_func: callable,
+        active: bool = True,
+        desc: str = "",
+        example: nx.DiGraph = None,
+        **load_kwargs,
+    ):
         self.name = name
         self.active = active
         self._parse_func = parse_func
@@ -22,6 +38,7 @@ class Source:
 
     def parse(self, graph: "GraphManager"):
         self._parse_func(graph, **self.load_kwargs)
+
 
 SOURCES = [
     Source(
@@ -46,11 +63,6 @@ SOURCES = [
     Source(
         name="openproductsfacts",
         parse_func=parse_productsfacts,
-        desc="Product list from Openproductsfacts"
+        desc="Product list from Openproductsfacts",
     ),
 ]
-
-
-
-
-

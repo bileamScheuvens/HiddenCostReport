@@ -3,7 +3,6 @@ from .graph_manager import GraphManager
 from .cost_calculation import TrueCostCalculator
 
 
-
 def example_query(graph: GraphManager, company):
     id = graph.get_company_id(company)
     query = f"""
@@ -18,7 +17,11 @@ def example_query(graph: GraphManager, company):
     ?metrID <{NS}MetricTitle> ?metric .
     }}
     """
-    return [f"{row['company'].value} {row['metric'].value} {row['value'].value} {row['year'].value}" for row in graph.query(query)]
+    return [
+        f"{row['company'].value} {row['metric'].value} {row['value'].value} {row['year'].value}"
+        for row in graph.query(query)
+    ]
+
 
 def query_get_metrics(company_id: str, year: int):
     return f"""
@@ -33,6 +36,7 @@ def query_get_metrics(company_id: str, year: int):
     ?metrID <{NS}MetricDesigner> ?metricdesigner .
     }}
     """
+
 
 def query_transparent_company():
     return f"""
@@ -50,6 +54,7 @@ def query_transparent_company():
     GROUP BY ?company ?year 
     HAVING (COUNT(DISTINCT ?metric_category) > 3)
     """
+
 
 def get_true_cost(graph: GraphManager, company: str, year: int):
     cost_calculator = TrueCostCalculator()
