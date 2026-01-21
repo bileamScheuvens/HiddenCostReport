@@ -1,3 +1,6 @@
 __pycache__/
 .nix/
 lib/
+qlever/*
+!qlever/Qleverfile
+!qlever/Qleverfile-ui.yml

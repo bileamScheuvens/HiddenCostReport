@@ -44,7 +44,7 @@ def query_transparent_company():
     ?companyID <{NS}Name> ?company .
     ?companyID <{NS}hasMetric> ?obs .
 
-    VALUES ?metric_category {{ "emission_scope1" "waste" "water" "electricity_consumption" "emission" }}
+    VALUES ?metric_category {{ "water_recycled" "waste_hazardous" "emission_scope1" "waste" "water" "electricity_consumption" "emission" "emission_scope1" }}
     ?obs <{NS}Value> ?value .
     ?obs <{NS}Year> ?year .
     ?obs <{NS}MetricID> ?metrID .
@@ -52,7 +52,7 @@ def query_transparent_company():
     ?metrID <{NS}MetricCategory> ?metric_category .
     }}
     GROUP BY ?company ?year 
-    HAVING (COUNT(DISTINCT ?metric_category) > 3)
+    HAVING (COUNT(DISTINCT ?metric_category) > 5)
     """
 
 

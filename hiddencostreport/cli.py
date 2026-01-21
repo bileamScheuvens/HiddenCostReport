@@ -28,16 +28,17 @@ args = parser.parse_args()
 
 if args.command == "rebuild":
     graph = GraphManager()
-    graph.rebuild_graph(verbosity=args.verbosity)
+    # graph.rebuild_graph(verbosity=args.verbosity)
+    graph.serialize()
 elif args.command == "ui":
     _config.set_option("server.headless", True)
     run(os.path.join("ui", "app.py"), args=[], flag_options=[], is_hello=False)
 elif args.command == "example_query":
     graph = GraphManager()
-    res = example_query(graph, "Nestle")
-    print(*res, sep="\n")
-    # res = graph.query(query_transparent_company())
-    # print(*[x["company"].value + " " + str(x["year"].value) for x in res], sep="\n")
+    # res = example_query(graph, "Nestle")
+    # print(*res, sep="\n")
+    res = graph.query(query_transparent_company())
+    print(*[x["metric_count"].value + " " + x["company"].value + " " + str(x["year"].value) for x in res], sep="\n")
 elif args.command == "example_cost":
     graph = GraphManager()
     res = get_true_cost(graph, "Nestle", 2022)

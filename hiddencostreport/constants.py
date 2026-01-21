@@ -6,3 +6,5 @@ DATADIR = os.path.join(os.path.expanduser("~"), "data", "hiddencostreport")
 
 CURATEDMETRICPATHS = os.path.join(DATADIR, "metrics_curated.csv")
 GRAPHPATH = os.path.join(DATADIR, "graph")
+QLEVERDIR = os.path.join(ROOT, "..", "qlever")
+

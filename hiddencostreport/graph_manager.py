@@ -1,8 +1,9 @@
 import os
 from .constants import GRAPHPATH
 from pyoxigraph import Store
+
 from time import time
-from .constants import ROOT, CURATEDMETRICPATHS
+from .constants import ROOT, CURATEDMETRICPATHS, QLEVERDIR
 from .data_sources import SOURCES
 from .harmonization import CompanyIDLookup, MetricIDLookup
 import pyoxigraph as pox
@@ -67,6 +68,10 @@ class GraphManager:
     def save(self):
         self.company_id_lookup.save()
         self.metric_id_lookup.save()
+
+    def serialize(self):
+        with open(os.path.join(QLEVERDIR, "serialized.ttl"), 'wb') as f:
+            self.store.dump(f, pox.RdfFormat.TURTLE, from_graph=pox.DefaultGraph())
 
     def rebuild_graph(
         self, verbosity: int = 1, metrics_path: str = CURATEDMETRICPATHS

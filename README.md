@@ -38,14 +38,17 @@ Other Milestones:
 - [ ] UI
 - [ ] Joining other datasources in rdf (wikidata)
 - [ ] query translation
-- [ ] qlever integration
+- [x] qlever integration
+    - [x] wait for fix: current build broken in docker (https://github.com/qlever-dev/qlever-control/issues/238)
 - [x] download schedule / overview 
 - [ ] logging
 - [ ] source categorization & cost map
+     - [ ] integrate trueprice, then leave be
 - [x] schema example diagram
 - [x] source selection on rebuild
-- [ ] decide when to write report
+- [x] decide when to write report: march + april
 - [ ] knowledge graph evaluation 
+    - [ ] follow Wang21 and give statement for each axis
 
 
 
