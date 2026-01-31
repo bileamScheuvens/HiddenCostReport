@@ -1,5 +1,6 @@
 import os
 from .constants import GRAPHPATH
+import pandas as pd
 from pyoxigraph import Store
 
 from time import time
@@ -28,8 +29,16 @@ class GraphManager:
         self.store.load(*args, **kwargs)
 
     def query(self, *args, **kwargs):
-        """Passthrough to store."""
-        return self.store.query(*args, **kwargs)
+        """Run query and return as Dataframe."""
+        query_result = self.store.query(*args, **kwargs)
+        df = []
+        for row in query_result:
+            df.append(list(map(lambda x: x.value, row)))
+
+        df = pd.DataFrame(df)
+        if not df.empty:
+            df.columns = list(map(str, query_result.variables))
+        return df
 
     def clear(self):
         """Passthrough to store."""
@@ -70,7 +79,7 @@ class GraphManager:
         self.metric_id_lookup.save()
 
     def serialize(self):
-        with open(os.path.join(QLEVERDIR, "serialized.ttl"), 'wb') as f:
+        with open(os.path.join(QLEVERDIR, "serialized.ttl"), "wb") as f:
             self.store.dump(f, pox.RdfFormat.TURTLE, from_graph=pox.DefaultGraph())
 
     def rebuild_graph(

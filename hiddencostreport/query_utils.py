@@ -17,10 +17,7 @@ def example_query(graph: GraphManager, company):
     ?metrID <{NS}MetricTitle> ?metric .
     }}
     """
-    return [
-        f"{row['company'].value} {row['metric'].value} {row['value'].value} {row['year'].value}"
-        for row in graph.query(query)
-    ]
+    return graph.query(query)
 
 
 def query_get_metrics(company_id: str, year: int):
@@ -51,8 +48,8 @@ def query_transparent_company():
     ?metrID <{NS}MetricTitle> ?metric_title .
     ?metrID <{NS}MetricCategory> ?metric_category .
     }}
-    GROUP BY ?company ?year 
-    HAVING (COUNT(DISTINCT ?metric_category) > 5)
+    GROUP BY ?company 
+    HAVING (COUNT(DISTINCT ?metric_category) > 0)
     """
 
 
@@ -64,10 +61,10 @@ def get_true_cost(graph: GraphManager, company: str, year: int):
     cost_lb, cost_ub = 0, 0
     for row in graph.query(query):
         bounds = cost_calculator.get_cost(
-            metric_title=row["metrictitle"].value,
-            metric_category=row["metriccategory"].value,
-            metric_unit=row["unit"].value,
-            metric_value=row["value"].value,
+            metric_title=row["metrictitle"],
+            metric_category=row["metriccategory"],
+            metric_unit=row["unit"],
+            metric_value=row["value"],
         )
         cost_lb += bounds[0]
         cost_ub += bounds[1]

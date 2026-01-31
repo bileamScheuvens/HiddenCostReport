@@ -47,16 +47,17 @@
               openpyxl 
               pint 
               plotly 
+              openai
               torchWithCuda
               (ps.buildPythonPackage rec {
                 pname = "qlever";
-                version = "0.5.43";
+                version = "0.5.44";
                 format = "pyproject";
 
                 src = pkgs.fetchPypi {
                   inherit pname;
                   inherit version;
-                  hash = "sha256-7ozfn1azubtr6DSpeIpHuoci27Iz6vsOMoEP4wtfcN4="; # fill after first run
+                  hash = "sha256-1GHZtbPQlwBTmkvr6qRUw3mfcK9BWbW3JCEjZit+6jk="; # fill after first run
                 };
                 nativeBuildInputs = [ setuptools poetry-core ];
                 propagatedBuildInputs = [
@@ -84,14 +85,13 @@
               })
               (ps.buildPythonPackage rec {
                 pname = "streamlit-searchbox";
-                version = "";
+                version = "0.1.24";
                 format = "pyproject";
 
-                src = pkgs.fetchFromGitHub {
-                  owner = "m-wrzr";
-                  repo = pname;
-                  rev = "main";
-                  hash = "sha256-DPoFWpR2yCsnUSza2JjHhKiB1XFSNBp749Da+7wEr8I="; # fill after first run
+                src = pkgs.fetchurl {
+                  url = "https://files.pythonhosted.org/packages/46/c1/b037f76f7d6da73af6311720df3c56ed534616572da4261c0dea1e37110e/streamlit_searchbox-0.1.24.tar.gz";
+                  sha256 = "sha256-tgCcNogS/uoN0hHwPJzFzIW1QLDQpXFluyiF9n1qij0=";
+
                 };
                 nativeBuildInputs = [ setuptools ];
                 propagatedBuildInputs = [ streamlit ];
@@ -106,8 +106,11 @@
                   repo = pname;
                   rev = "main";
 
-                  hash = "sha256-uW94L+Xzkm91Zj86Hg8EfCakbhfx+vr2LejPNXdqyQY="; # fill after first run
+                  hash = "sha256-kwlsuU0Er1gV1QLx5sqcK45LJQQG8d8XgY4lNEYdV8I="; # fill after first run
                 };
+                propagatedBuildInputs = [
+                  html2text
+                ];
               })
             ]
           ))
@@ -142,6 +145,7 @@
             ]
           }:$LIBRARY_PATH
 
+          eval "$(register-python-argcomplete qlever)" && export QLEVER_ARGCOMPLETE_ENABLED=1
         '';
       };
     };

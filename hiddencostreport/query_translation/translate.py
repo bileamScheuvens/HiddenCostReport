@@ -1,90 +1,93 @@
+import os
+from warnings import warn
+from openai import OpenAI
+import dotenv
+import re
+from ..constants import ROOT
 
-import torch
-from typing import Any, Dict
-from transformers import pipeline
+dotenv.load_dotenv(os.path.join(ROOT, ".env"))
 
-class LLMConfig:
-    def __init__(
-        self,
-        target_repr: str,
-        sampling_strategy: str = "random",
-        n_similar_examples: int = 5,
-        cover_operators: bool = False,
-        prompt_version: str = "v1",
-        instruction_based: bool = False,
-    ) -> None:
-        self.target_repr = target_repr
-        self.n_similar_examples = n_similar_examples
-        self.cover_operators = cover_operators
-        self.sampling_strategy = sampling_strategy
-        self.prompt_version = prompt_version
-        self.instruction_based = instruction_based
+BASE_URL = "https://chat-ai.academiccloud.de/v1"
+MODEL = "qwq-32b"
+# MODEL = "deepseek-r1"
 
-    @staticmethod
-    def ablation_categories():
-        return [
-            "target_repr",
-            "sampling_strategy",
-            "n_similar_examples",
-            "cover_operators",
-            "prompt_version",
-        ]
+client = OpenAI(api_key=os.getenv("SAIA_KEY"), base_url=BASE_URL)
 
-    @staticmethod
-    def cat_to_human_readable(cat):
-        return {
-            "target_repr": "Target Representation",
-            "sampling_strategy": "Sampling Strategy",
-            "n_similar_examples": "Number of Similar Examples",
-            "cover_operators": "Cover Operators",
-            "prompt_version": "Prompt Version",
-        }[cat]
-    
-    @staticmethod
-    def repr_to_human_readable(repr):
-        return {
-            "asp_flat": "Flat ASP",
-            "asp_nested": "Nested ASP",
-            "asp_code": "Code-like ASP",
-            "gqa": "GQA",
-        }[repr]
+SYSTEM_PROMPT = """
+Your task is to translate natural language questions into SPARQL queries.
 
-    def get_ablation_values(self):
-        return [self.__dict__[key] for key in self.ablation_categories()]
+The knowledge base is comprised of several sources, most prominently wikirate metrics.
+The sources are not all harmonized, avoid specific vocabulary (tons might be called tonnes elsewhere).
+The schema of the knowledge graph is as follows:
+PREFIX hcr: <http://hiddencostreport.org/schema#>
 
-class HuggingFaceLLM():
+hcr:company_id hcr:Name companyName ;
+    hcr:OpenCorporatesID openCorporatesID ;
+    hcr:hasMetric _:metricObservation .
+_:metricObservation hcr:MetricID metricID ;
+    hcr:Value observationValue ;
+    hcr:Year observationYear ;
+hcr:MetricID hcr:MetricTitle metricTitle ;
+    hcr:MetricDesigner MetricDesigner ;
+    hcr:Unit unit ;
+    hcr:ValueType valuetype ;
+    hcr:MetricType metricType ;
+    hcr:MetricCategory MetricCategory ;
+    hcr:Questions questions ;
 
-    def __init__(
-        self,
-        config: LLMConfig,
-        version: str = "HuggingFaceH4/zephyr-7b-alpha",
-        name: str = None,
-        inference_kwargs: Dict[str, Any] = {},
-    ) -> None:
-        super().__init__(config)
-        self.pipe = pipeline(
-            "text-generation",
-            model=version,
-            torch_dtype=torch.bfloat16,
-            device_map="auto",
-        )
-        self.inference_kwargs = inference_kwargs
-        self.inference_kwargs["pad_token_id"] = self.pipe.tokenizer.eos_token_id
-        self.inference_kwargs["max_new_tokens"] = self._max_tokens
-        self._name = name if name else version
+Return a single code block denoted with ``` and nothing else.
+Only use the predicates
+Include PREFIX in your query.
+"""
 
 
-    def generate(self, question: str) -> tuple[str, int]:
-        output, nr_examples = self._generate(question)
-        return self.post_process(output), nr_examples
+def extract_sparql(x):
+    if "```sparql" not in x:
+        warn(f"no sparl code block found in {x}")
+        return ""
+    return x.split("```sparql")[1].split("```")[0]
 
-    def _generate(self, question: str) -> tuple[str, int]:
-        prompt, nr_examples = self.prompt_creator.get_prompt(question)
-        messages = self.pipe.tokenizer.apply_chat_template(
-            prompt, tokenize=False, add_generation_prompt=True
-        )
-        return self.pipe(messages, **self.inference_kwargs)[0]["generated_text"], nr_examples
 
-    def post_process(self, output: str) -> str:
-        output = output.split("<|assistant|>\n")[1]
-        return self.cutoff_output(output)
+def extract_thought(x):
+    if "<think>" not in x:
+        warn(f"no thought process found in {x}")
+        return ""
+    return x.split("<think>")[1].split("</think>")[0]
+
+
+def query_to_sparql(query: str):
+    response = client.chat.completions.create(
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": query},
+        ],
+        model=MODEL,
+    )
+    response = response.choices[0].message.content
+    translation = extract_sparql(response)
+    thought_process = extract_thought(response)
+
+    return translation, thought_process
+
+
+def query_to_sparql_prettyprint(graph, query: str, verbosity: int):
+    translated, thought_process = query_to_sparql(query)
+    try:
+        query_result = graph.query(translated)
+    except SyntaxError as e:
+        query_result = f"Query Errored: {e}"
+
+    print(f"""
+========================================
+original query:\n{query}
+========================================
+llm output:\n{translated}
+========================================
+query result:\n{query_result}"
+========================================
+""")
+    if verbosity:
+        print(f"""
+llm thought process:\n{thought_process}")
+========================================
+""")

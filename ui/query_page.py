@@ -13,38 +13,27 @@ selected_company = st_searchbox(
 if selected_company:
     id = graph.get_company_id(selected_company)
     st.write(f"company id: {id.split('#')[1]}")
-select = st.text_input(
-    "select",
-    value="""\
-SELECT ?metric ?value ?year""",
-)
 query = st.text_area(
     "query",
     height=300,
     value="""\
-WHERE {
-<{id}> <{NS}Name> ?company .
-<{id}> <{NS}hasMetric> ?obs .
-?obs <{NS}Value> ?value .
-?obs <{NS}Year> ?year .
-?obs <{NS}MetricID> ?metrID .
-?metrID <{NS}MetricTitle> ?metric .
+PREFIX hcr: <http://hiddencostreport.org/schema#>
+SELECT ?company ?metric ?value ?year WHERE {
+    <{id}> hcr:Name ?company .
+    <{id}> hcr:hasMetric ?obs .
+    ?obs hcr:Value ?value .
+    ?obs hcr:Year ?year .
+    ?obs hcr:MetricID ?metrID .
+    ?metrID hcr:MetricTitle ?metric .
 } """,
 )
 submit = st.button("submit")
 
 
-if submit and selected_company and select and query:
+if submit and selected_company and query:
     query = query.replace("{id}", id)
-    query = query.replace("{NS}", NS)
-    selected_vars = select.replace("SELECT ", "").replace("?", "").split()
-
-    res = []
-    for row in graph.query(select + " " + query):
-        res.append(list(map(lambda x: x.value, row)))
-    df = pd.DataFrame(res)
+    df = graph.query(query)
     if df.empty:
         st.title("Query returned no results")
     else:
-        df.columns = selected_vars
         st.write(df)

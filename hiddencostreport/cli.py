@@ -5,6 +5,7 @@ from .query_utils import example_query, get_true_cost, query_transparent_company
 from streamlit import config as _config
 from streamlit.web.bootstrap import run
 from .data_sources.truepricemethod import read_costs
+from .query_translation.translate import query_to_sparql_prettyprint
 
 parser = ArgumentParser(prog="HiddenCostReport")
 parser.add_argument(
@@ -16,19 +17,21 @@ parser.add_argument(
         "test_mapping",
         "example_query",
         "example_cost",
+        "translate",
         "stats",
     ],
     help="Action to be performed.",
 )
 parser.add_argument("-v", "--verbose", default=0, action="count", dest="verbosity")
 parser.add_argument("-i", "--interactive", dest="interactive", action="store_true")
+parser.add_argument("-q", "--query", dest="query", default="")
 
 args = parser.parse_args()
 
 
 if args.command == "rebuild":
     graph = GraphManager()
-    # graph.rebuild_graph(verbosity=args.verbosity)
+    graph.rebuild_graph(verbosity=args.verbosity)
     graph.serialize()
 elif args.command == "ui":
     _config.set_option("server.headless", True)
@@ -36,9 +39,8 @@ elif args.command == "ui":
 elif args.command == "example_query":
     graph = GraphManager()
     # res = example_query(graph, "Nestle")
-    # print(*res, sep="\n")
     res = graph.query(query_transparent_company())
-    print(*[x["metric_count"].value + " " + x["company"].value + " " + str(x["year"].value) for x in res], sep="\n")
+    print(res)
 elif args.command == "example_cost":
     graph = GraphManager()
     res = get_true_cost(graph, "Nestle", 2022)
@@ -49,6 +51,12 @@ elif args.command == "stats":
 elif args.command == "test_mapping":
     read_costs()
     pass
+elif args.command == "translate":
+    if not args.query:
+        raise ValueError("translate needs --query option set.")
+    graph = GraphManager()
+    query_to_sparql_prettyprint(graph, args.query, args.verbosity)
+
 
 if args.interactive:
     os.environ["PYTHONINSPECT"] = "TRUE"

@@ -32,13 +32,13 @@ if selected_company and year:
     category_to_cost = defaultdict(list)
 
     for row in graph.query(query_get_metrics(company_id=id, year=year)):
-        category = row["metriccategory"].value
-        title = row["metrictitle"].value
+        category = row["metriccategory"]
+        title = row["metrictitle"]
         lb, ub = cost_calculator.get_cost(
             metric_title=title,
             metric_category=category,
-            metric_unit=row["unit"].value,
-            metric_value=row["value"].value,
+            metric_unit=row["unit"],
+            metric_value=row["value"],
         )
         category_to_cost[category].append((title, lb, ub))
     st.plotly_chart(cost_sunburst(category_to_cost))
