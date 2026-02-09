@@ -22,8 +22,10 @@ Report should showcase exploitation of people and planet, broken laws, corporate
 
 
 ## Prototype scope:
-100 Companies (most data points as of 11/25)
-500 Metrics (with environmental tag, most bookmarked as of 11/25)
+[ ] 100 Companies (most data points as of 11/25)
+[x] 1000 Companies (most data points as of 01/26)
+[ ] 500 Metrics (with environmental tag, most bookmarked as of 11/25)
+[x] 5000 Metrics (with environmental tag, most bookmarked as of 01/26)
 
 
 ## Timeline:
@@ -37,9 +39,10 @@ Report should showcase exploitation of people and planet, broken laws, corporate
 Other Milestones:
 - [ ] UI
 - [ ] Joining other datasources in rdf (wikidata)
-- [ ] query translation
+- [x] query translation
 - [x] qlever integration
     - [x] wait for fix: current build broken in docker (https://github.com/qlever-dev/qlever-control/issues/238)
+- [x] qlever fixed parallel parsing blank node issue
 - [x] download schedule / overview 
 - [ ] logging
 - [ ] source categorization & cost map
