@@ -23,7 +23,6 @@
   rdfs:domain :Company ;
   rdfs:range rdfs:literal .
 
-
 :MetricTitle a rdf:property ;
   rdfs:domain :Metric ;
   rdfs:range rdfs:literal .
