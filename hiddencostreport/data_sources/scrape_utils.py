@@ -1,17 +1,21 @@
-import base64
 import asyncio
-from asyncio import TaskGroup
-from tqdm import tqdm
-from time import time
-from ..constants import DATADIR, ROOT, CURATEDMETRICPATHS
+import base64
 import os
+from asyncio import TaskGroup
+
+from time import time, sleep
+from warnings import warn
+
+
+import dotenv
 import numpy as np
 import pandas as pd
-import dotenv
+from tqdm import tqdm
 from wikirate4py import API, Cursor
-from warnings import warn
 from wikirate4py.utils import to_dataframe
+from wikirate4py.exceptions import WikirateServerErrorException
 
+from ..constants import CURATEDMETRICPATHS, DATADIR, METRICSPATH, ROOT
 
 dotenv.load_dotenv(os.path.join(ROOT, ".env"))
 
@@ -56,24 +60,41 @@ async def download_metric(
         per_page=100,
     )
     answers = []
-    while cursor.has_next():
-        answers += cursor.next()
+    try:
+        while cursor.has_next():
+            answers += cursor.next()
+            # throttle download
+            sleep(1)
+    # except WikirateServerErrorException:
+    except Exception as e:
+        warn(
+            f"Error for {metric_name}+{metric_designer}, skipping. {e}.\nDiscarding {len(answers)} elements."
+        )
+        return
 
     df = to_dataframe(answers)
-    df = df[["id", "metric", "company", "value", "year"]]
-    # write to file
-    df.to_csv(outpath, index=False)
+    try:
+        df = df[["id", "metric", "company", "value", "year"]]
+        # write to file
+        df.to_csv(outpath, index=False)
+    except Exception as e:
+        warn(
+            f"Error for {metric_name}+{metric_designer}, skipping. {e}.\nDiscarding {len(answers)} elements."
+        )
+        return
 
     # return task id for bookkeeping, if download was successful
     return task_id
 
 
-async def download_metrics(metrics_path: str = "", num_threads: int = 5):
+async def download_metrics(
+    metrics_path: CURATEDMETRICPATHS, num_threads: int = 5, ignore_cache: bool = False
+):
     """Download all metrics listed in supplied file."""
     overview_path = os.path.join(DATADIR, "metric_download_overview.csv")
 
     # create overview file for storing timestamps
-    if not os.path.exists(overview_path):
+    if not os.path.exists(overview_path) or ignore_cache:
         overview = pd.read_csv(metrics_path)
         overview = overview[["ID", "Metric Title", "Metric Designer"]]
         overview["download_timestamp"] = np.nan
@@ -120,4 +141,4 @@ async def download_metrics(metrics_path: str = "", num_threads: int = 5):
 
 
 if __name__ == "__main__":
-    asyncio.run(download_metrics(CURATEDMETRICPATHS))
+    asyncio.run(download_metrics(METRICSPATH))

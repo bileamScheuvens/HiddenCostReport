@@ -4,7 +4,7 @@ import pandas as pd
 from pyoxigraph import Store
 
 from time import time
-from .constants import ROOT, CURATEDMETRICPATHS, QLEVERDIR
+from .constants import ROOT, METRICSPATH, QLEVERDIR
 from .data_sources import SOURCES
 from .harmonization import CompanyIDLookup, MetricIDLookup
 import pyoxigraph as pox
@@ -83,7 +83,7 @@ class GraphManager:
             self.store.dump(f, pox.RdfFormat.TURTLE, from_graph=pox.DefaultGraph())
 
     def rebuild_graph(
-        self, verbosity: int = 1, metrics_path: str = CURATEDMETRICPATHS
+        self, verbosity: int = 1, metrics_path: str = METRICSPATH
     ) -> None:
         """Construct graph from all sources."""
         # init store

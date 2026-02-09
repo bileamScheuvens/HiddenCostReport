@@ -3,9 +3,10 @@ import pandas as pd
 from pandas.core.series import Series
 import os
 import networkx as nx
+from warnings import warn
 from tqdm import tqdm
 from .scrape_utils import filename_encode
-from ..constants import DATADIR, NS, CURATEDMETRICPATHS
+from ..constants import DATADIR, NS, METRICSPATH, COMPANIESPATH
 from ..harmonization import CategoryMapper
 from typing import TYPE_CHECKING
 
@@ -13,7 +14,7 @@ if TYPE_CHECKING:
     from .graph_manager import GraphManager
 
 
-def parse_metrics_metadata(graph: "GraphManager", filename: str = "metrics_500.csv"):
+def parse_metrics_metadata(graph: "GraphManager", filename: str = "metrics_1000.csv"):
     """Parse metrics csv into rdf."""
 
     category_mapper = CategoryMapper()
@@ -67,7 +68,7 @@ def example_metrics_metadata() -> nx.DiGraph:
     return G
 
 
-def parse_companies(graph: "GraphManager", filename: str = "companies_100.csv") -> None:
+def parse_companies(graph: "GraphManager", filename=COMPANIESPATH) -> None:
     """Parse companies from csv to rdf and return lookup for id."""
 
     def _parse_company_row(x: Series):
@@ -83,16 +84,17 @@ def parse_companies(graph: "GraphManager", filename: str = "companies_100.csv") 
 
         graph.add(Quad(company, NamedNode(NS + "Name"), Literal(x["Name"])))
 
-        if not pd.isna(x["OpenCorporates ID"]):
+        if not pd.isna(x["International Securities Identification Number"]):
             graph.add(
                 Quad(
                     company,
+                    # TODO: again misaligned, OpenCorporatesID is in International Securities Identification Number
                     NamedNode(NS + "OpenCorporatesID"),
-                    Literal(x["OpenCorporates ID"]),
+                    Literal(x["International Securities Identification Number"]),
                 )
             )
 
-    companies = pd.read_csv(os.path.join(DATADIR, filename))
+    companies = pd.read_csv(filename)
     companies.apply(_parse_company_row, axis=1)
 
 
@@ -130,7 +132,12 @@ def parse_metric(graph: "GraphManager", metric_name: str, metric_designer: str) 
         graph.add(Quad(observation, NamedNode(NS + "Value"), Literal(x["value"])))
 
     filename = filename_encode(metric_name=metric_name, metric_designer=metric_designer)
-    df = pd.read_csv(os.path.join(DATADIR, "metrics", filename + ".csv"))
+    filepath = os.path.join(DATADIR, "metrics", filename + ".csv")
+    if not os.path.exists(filepath):
+        warn(f"Could not find metric {metric_name}, skipping")
+        return
+
+    df = pd.read_csv(filepath)
     df.apply(_parse_row, axis=1)
 
 
@@ -150,9 +157,7 @@ def example_metric() -> nx.DiGraph:
     return G
 
 
-def parse_metrics(
-    graph: "GraphManager", metrics_path: str = CURATEDMETRICPATHS
-) -> None:
+def parse_metrics(graph: "GraphManager", metrics_path: str = METRICSPATH) -> None:
     metrics = pd.read_csv(metrics_path)
     tqdm.pandas()
     metrics.progress_apply(
