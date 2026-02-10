@@ -5,16 +5,36 @@ import os
 from ..constants import DATADIR, NS
 
 
-def parse_productsfacts(
+def parse_openproductsfacts(
     store: Store,
-    filename: str = "openproductsfacts/en_openproductsfacts.csv",
+    filename: str = "openfacts/en_openproductsfacts.csv",
     company_id_lookup: dict = {},
+):
+    return parse_openfacts(
+        store=store, filename=filename, company_id_lookup=company_id_lookup
+    )
+
+
+def parse_openfoodfacts(
+    store: Store,
+    filename: str = "openfacts/en.openfoodfacts.org.products.csv",
+    company_id_lookup: dict = {},
+):
+    return parse_openfacts(
+        store=store, filename=filename, company_id_lookup=company_id_lookup
+    )
+
+
+def parse_openfacts(
+    store: Store,
+    filename: str,
+    company_id_lookup: dict,
 ):
     def _add_attribute(x: Series, product: NamedNode, key: str, label: str):
         """Add attribute to store with sanitization."""
         if pd.isna(x[key]):
             return
-        for attr in x[key]:
+        for attr in x[key].split(","):
             try:
                 store.add(
                     Quad(

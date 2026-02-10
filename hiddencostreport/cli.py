@@ -42,8 +42,8 @@ args = parser.parse_args()
 
 if args.command == "rebuild":
     graph = GraphManager()
-    # graph.rebuild_graph(verbosity=args.verbosity)
-    # graph.serialize()
+    graph.rebuild_graph(verbosity=args.verbosity)
+    graph.serialize()
     if args.restart_qlever:
         print("restarting qlever")
         os.chdir("qlever")

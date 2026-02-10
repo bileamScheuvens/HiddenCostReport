@@ -31,14 +31,20 @@ if selected_company and year:
     # TODO: rewrite as tree?
     category_to_cost = defaultdict(list)
 
-    for row in graph.query(query_get_metrics(company_id=id, year=year)):
-        category = row["metriccategory"]
-        title = row["metrictitle"]
-        lb, ub = cost_calculator.get_cost(
-            metric_title=title,
-            metric_category=category,
-            metric_unit=row["unit"],
-            metric_value=row["value"],
+    query_result = graph.query(query_get_metrics(company_id=id, year=year))
+    if not query_result.empty:
+        query_result["bounds"] = query_result.apply(
+            lambda row: cost_calculator.get_cost(
+                metric_title=row["?metrictitle"],
+                metric_category=row["?metriccategory"],
+                metric_unit=row["?unit"],
+                metric_value=row["?value"],
+            ),
+            axis=1,
         )
-        category_to_cost[category].append((title, lb, ub))
-    st.plotly_chart(cost_sunburst(category_to_cost))
+        for i, (c, t, bounds) in query_result[
+            ["?metriccategory", "?metrictitle", "bounds"]
+        ].iterrows():
+            category_to_cost[c].append((t, bounds[0], bounds[1]))
+
+        st.plotly_chart(cost_sunburst(category_to_cost))

@@ -6,7 +6,7 @@ from .wikirate import (
     example_metric,
     example_companies,
 )
-from .openproductsfacts import parse_productsfacts
+from .openproductsfacts import parse_openfoodfacts, parse_openproductsfacts
 import networkx as nx
 from typing import TYPE_CHECKING
 
@@ -62,7 +62,12 @@ SOURCES = [
     ),
     Source(
         name="openproductsfacts",
-        parse_func=parse_productsfacts,
-        desc="Product list from Openproductsfacts",
+        parse_func=parse_openproductsfacts,
+        desc="Product list from openPRODUCTfacts",
+    ),
+    Source(
+        name="openfoodfacts",
+        parse_func=parse_openfoodfacts,
+        desc="Product list from openFOODfacts",
     ),
 ]
