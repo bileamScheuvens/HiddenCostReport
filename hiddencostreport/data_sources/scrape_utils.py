@@ -13,7 +13,6 @@ import pandas as pd
 from tqdm import tqdm
 from wikirate4py import API, Cursor
 from wikirate4py.utils import to_dataframe
-from wikirate4py.exceptions import WikirateServerErrorException
 
 from ..constants import CURATEDMETRICPATHS, DATADIR, METRICSPATH, ROOT
 
@@ -40,6 +39,7 @@ async def download_metric(
     metric_designer: str,
     task_id: int = -1,
     ignore_cache: bool = False,
+    verbosity=0,
 ):
     """Download metric from api."""
     # path management
@@ -49,7 +49,8 @@ async def download_metric(
     # check if file already exists
     # probably unneccessary, should be handled by download overview
     if os.path.exists(outpath) and not ignore_cache:
-        warn(f"Using cached {metric_name} by {metric_designer}")
+        if verbosity:
+            warn(f"Using cached {metric_name} by {metric_designer}")
         return
 
     # scrape until cursor is empty
@@ -88,7 +89,10 @@ async def download_metric(
 
 
 async def download_metrics(
-    metrics_path: CURATEDMETRICPATHS, num_threads: int = 5, ignore_cache: bool = False
+    metrics_path: CURATEDMETRICPATHS,
+    num_threads: int = 5,
+    ignore_cache: bool = False,
+    verbosity=0,
 ):
     """Download all metrics listed in supplied file."""
     overview_path = os.path.join(DATADIR, "metric_download_overview.csv")
@@ -118,13 +122,15 @@ async def download_metrics(
                 except StopIteration:
                     downloading = False
                     break
-                print(f"fetching {row['Metric Title']}")
+                if verbosity:
+                    print(f"fetching {row['Metric Title']}")
                 tasks.append(
                     tg.create_task(
                         download_metric(
                             task_id=task_id,
                             metric_name=row["Metric Title"],
                             metric_designer=row["Metric Designer"],
+                            verbosity=verbosity,
                         )
                     )
                 )

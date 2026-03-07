@@ -196,6 +196,14 @@ class CategoryMapper:
         else:
             return "disclosure_single"
 
+    def revenue_metrics(
+        self, metric_designer, metric_title, questions, value_type, **kwargs
+    ):
+        if value_type != "Number":
+            return False
+        if self._match_terms(metric_title, ["revenue"]):
+            return "revenue"
+
     def assign_category(self, **kwargs):
         for mapper in [
             self.derived_metrics,
@@ -204,6 +212,7 @@ class CategoryMapper:
             self.water_metrics,
             self.electricity_metrics,
             self.waste_metrics,
+            self.revenue_metrics,
         ]:
             res = mapper(**kwargs)
             if res:

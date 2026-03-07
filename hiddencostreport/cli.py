@@ -84,7 +84,11 @@ elif args.command == "translate":
     graph = GraphManager()
     query_to_sparql_prettyprint(graph, args.query, args.verbosity)
 elif args.command == "download":
-    asyncio.run(download_metrics(METRICSPATH, ignore_cache=args.ignore_cache))
+    asyncio.run(
+        download_metrics(
+            METRICSPATH, ignore_cache=args.ignore_cache, verbosity=args.verbosity
+        )
+    )
 elif args.command == "eval":
     graph = GraphManager()
     eval_completeness(graph)

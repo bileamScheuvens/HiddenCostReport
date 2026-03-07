@@ -64,10 +64,12 @@ SOURCES = [
         name="openproductsfacts",
         parse_func=parse_openproductsfacts,
         desc="Product list from openPRODUCTfacts",
+        active=False,
     ),
     Source(
         name="openfoodfacts",
         parse_func=parse_openfoodfacts,
         desc="Product list from openFOODfacts",
+        active=False,
     ),
 ]
