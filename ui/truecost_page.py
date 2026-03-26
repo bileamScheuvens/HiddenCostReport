@@ -3,7 +3,7 @@ from collections import defaultdict
 from streamlit_searchbox import st_searchbox
 from hiddencostreport.cost_calculation import TrueCostCalculator
 from plotly_charts import cost_sunburst
-from hiddencostreport.query_utils import query_get_metrics
+from hiddencostreport.query_utils import query_get_metrics, query_get_revenue
 from app import get_graph
 
 
@@ -47,4 +47,16 @@ if selected_company and year:
         ].iterrows():
             category_to_cost[c].append((t, bounds[0], bounds[1]))
 
-        st.plotly_chart(cost_sunburst(category_to_cost))
+        fig, total_hidden_cost = cost_sunburst(category_to_cost)
+        st.plotly_chart(fig)
+
+    product_price = st.number_input("Product Price", min_value=0)
+    revenue = float(
+        graph.query(query_get_revenue(company_id=id, year=year))["?value"][0]
+    )
+    if product_price:
+        st.write(f"Revenue in {year}: ${revenue:.2e}")
+        st.write(f"Approximate total hidden cost: ${total_hidden_cost:.2e}")
+        st.write(
+            f"Proportional true cost: ${product_price + total_hidden_cost / revenue * product_price:.2f}"
+        )

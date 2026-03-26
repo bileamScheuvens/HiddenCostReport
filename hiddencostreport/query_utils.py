@@ -35,6 +35,18 @@ def query_get_metrics(company_id: str, year: int):
     """
 
 
+def query_get_revenue(company_id: str, year: int):
+    return f"""
+    SELECT ?value WHERE {{
+    <{company_id}> <{NS}hasMetric> ?obs .
+    ?obs <{NS}Value> ?value .
+    ?obs <{NS}Year> {year} .
+    ?obs <{NS}MetricID> ?metrID .
+    ?metrID <{NS}MetricCategory> "revenue" .
+    }}
+    """
+
+
 def query_transparent_company():
     return f"""
     SELECT ?company (COUNT(DISTINCT ?metric_category) AS ?metric_count) ?year WHERE {{

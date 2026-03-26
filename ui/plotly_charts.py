@@ -34,4 +34,4 @@ def cost_sunburst(category_to_cost: dict):
             branchvalues="total",
         )
     )
-    return fig
+    return fig, entries["total"]

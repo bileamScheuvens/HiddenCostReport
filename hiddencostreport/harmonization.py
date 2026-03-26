@@ -199,7 +199,7 @@ class CategoryMapper:
     def revenue_metrics(
         self, metric_designer, metric_title, questions, value_type, **kwargs
     ):
-        if value_type != "Number":
+        if value_type != "Money":
             return False
         if self._match_terms(metric_title, ["revenue"]):
             return "revenue"
