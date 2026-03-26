@@ -47,6 +47,7 @@
               openpyxl 
               pint 
               plotly 
+              kaleido
               openai
               torchWithCuda
               (ps.buildPythonPackage rec {

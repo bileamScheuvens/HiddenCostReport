@@ -2,6 +2,7 @@ __pycache__/
 .nix/
 lib/
 qlever/*
+*.pdf
 *.png
 !qlever/Qleverfile
 !qlever/Qleverfile-ui.yml

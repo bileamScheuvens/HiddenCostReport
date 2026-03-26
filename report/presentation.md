@@ -28,44 +28,9 @@ style: |
     }
 </style>
 
+
 # HiddenCostReport
 ### _Open Data Fusion for Approximate True Cost Accounting using Knowledge Graphs_
-
-<!-- // = Introduction -->
-<!-- // -->
-<!-- // - explain why economics fails -->
-<!-- // - explain rdf+sparql -->
-<!-- // -->
-<!-- // -->
-<!-- // = Related Work -->
-<!-- // - teebagrifood -->
-<!-- // - true price method -->
-<!-- // -->
-<!-- // = Methodology -->
-<!-- // - graph construction -->
-<!-- //   - sources -->
-<!-- //   - harmonization -->
-<!-- //     - manual cleanup -->
-<!-- //   - categorization -->
-<!-- // - graph utilization -->
-<!-- //   - qlever -->
-<!-- //   - ui -->
-<!-- //   - query translation -->
-<!-- // -->
-<!-- // -->
-<!-- // = Evaluation -->
-<!-- // - comparison to trueprice reports -->
-<!-- // - graph itself (wang21) -->
-<!-- // - query translation -->
-<!-- // -->
-<!-- // = Discussion -->
-<!-- // - usefulness -->
-<!-- // - shortcomings -->
-<!-- // - future work -->
-<!-- //   - product level -->
-<!-- //   - text integration -->
-<!-- //   - better pricing -->
-<!-- //   - better category mapping -->
 
 <span style="color:grey"> Research Project by</span> 
 <span style=""> Bileam Scheuvens</span>  <br>
@@ -80,7 +45,6 @@ style: |
 * Can we scale it
 * Demo
 * Limitations
-* Question
 
 
 ---
@@ -89,16 +53,19 @@ style: |
 ![bg right size:cover](res/trade.png)
 * price is a bad measure of value to society
     * unfair distribution
-    * planned obsolescene
+    * planned obsolescence
+    * ecological disaster
 * the economy is reward hacking
+* can we do better?
 
 <!-- 
 - since barter days, price reflects value 
 - limited in scope
-- subject to loopholes
 - rules are uneven globally
 
 - target is a bad measure
+- we want best, not loopholes
+- alternatives failed
 
 -->
 
@@ -110,13 +77,17 @@ style: |
 
 * originally information retrieval
 * now mostly data fusion & harmonization
-* hopefully still interesting
 
 --- 
 
-![bg right width:16cm](res/coffee_tca.png)
+
+#### _<span style="color:grey; font-size: 14pt"> Open Data Fusion for Approximate </span> True Cost Accounting <span style="color:grey;font-size:14pt">using Knowledge Graphs</span>_
+
+
+--- 
 
 ## What is True Cost Accounting
+![bg right width:16cm](res/coffee_tca.png)
 
 * internalize everything
     * restoration 
@@ -124,41 +95,14 @@ style: |
     * retribution 
     * prevention of re-occurence
 * tedious, difficult, temporary...
-* can we do better?
+* can we automate this?
 
-
----
-
-### Why Knowledge Graphs?
-
-<div class="textcolumns"> 
-
-<div style="font-size: 23px"> 
-
-* flexibility
-* extensibility 
-* complexity of queries
-
-</div>
-<div>
-
-```rdf
-:bocca  :is_a     :company
-:bocca  :produces :coffee
-
-:coffee :is_a     :beverage
-:coffee :contains :caffeine
-```
-
-```sparql
->> ?company :produces :beverage .
--> bocca
-```
-
-</div>
-</div>
-
-
+<!-- 
+- make up for damages
+- pay those affected 
+- penalties
+- audits, structural changes
+-->
 
 
 ---
@@ -198,6 +142,11 @@ style: |
         -> 70$/Mwh (Sovacool 2021)
     - Water usage: $1000m^3$ ?
         -> * 1$/m3 ?
+
+
+---
+
+#### _Open Data Fusion <span style="color:grey; font-size: 14pt"> for Approximate True Cost Accounting using Knowledge Graphs</span>_
 ---
 
 ## Methodology
@@ -209,13 +158,53 @@ style: |
 
 ---
 
+#### _<span style="color:grey; font-size: 14pt"> Open Data Fusion for Approximate True Cost Accounting using</span> Knowledge Graphs_
+
+---
+
+### Why Knowledge Graphs?
+
+<div class="textcolumns"> 
+
+<div style="font-size: 23px"> 
+
+* flexibility
+* extensibility 
+* complexity of queries
+
+</div>
+<div>
+
+```rdf
+:bocca  :is_a     :company
+:bocca  :produces :coffee
+
+:coffee :is_a     :beverage
+:coffee :contains :caffeine
+```
+
+```sparql
+>> ?company :produces :beverage .
+-> bocca
+```
+
+</div>
+</div>
+
+
+<!-- -->
+
+
+
+---
+
 ## Data Ingestion
 ![bg right size:cover ](res/metric_ex.png)
 
 * Selecting Sources
-    - Wikirate
-    - OpenProductsFacts
+    - Wikirate (1k companies & 1k metrics)
     - OpenFoodFacts
+    - OpenProductsFacts
 * harmonize
 
 
@@ -227,13 +216,13 @@ style: |
 
 <div style="font-size: 28px"> 
 
-- Keyword matching (current approach)
-* limited flexibility
-* ontology design is hard
-* Deduplication is nontrivial
-    * differences in gathering / processing
-    * unreliable self reporting
-    * difficult to assess authority
+- ontology design is hard
+* Keyword matching (current approach)
+    * brittle
+    * Deduplication is nontrivial
+        - unclear authority
+        - differences in gathering / processing
+        - unreliable self reporting
 
 
 </div>
@@ -354,22 +343,34 @@ water_withdrawal                      |  4 |                               |    
 ---
 
 ## Limitations
-- hard to reliably link product / brand / company 
+- unreliable
 * unclear how to handle supply chain
-* proprietary / non collected data
+* proprietary / non collected data (e.g. linking brand - company)
 * disincentivizes transparency
-* results too unreliable to be useful
 
+---
+
+## What now?
+- product integration
 
 
 ---
 
 ### Thanks for listening!
+
+<div class="textcolumns"> 
+<div>
+
 ##### Questions, Notes, Ideas?
 
---- 
+</div>
+<div>
+
 ## Sources
 - https://unsplash.com/@publicdomainvectors/illustrations
 - https://rocketreach.co/bocca-coffee-profile_b4472270fae17b7f
 - https://unsplash.com/photos/coffee-bean-lot-TD4DBagg2wE
 - https://github.com/Truepricemethod/Monetisation_factors
+
+</div>
+</div>
