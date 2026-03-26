@@ -51,10 +51,13 @@ if selected_company and year:
         st.plotly_chart(fig)
 
     product_price = st.number_input("Product Price", min_value=0)
-    revenue = float(
-        graph.query(query_get_revenue(company_id=id, year=year))["?value"][0]
-    )
-    if product_price:
+    try:
+        revenue = float(
+            graph.query(query_get_revenue(company_id=id, year=year))["?value"][0]
+        )
+    except KeyError:
+        revenue = None
+    if product_price and revenue:
         st.write(f"Revenue in {year}: ${revenue:.2e}")
         st.write(f"Approximate total hidden cost: ${total_hidden_cost:.2e}")
         st.write(

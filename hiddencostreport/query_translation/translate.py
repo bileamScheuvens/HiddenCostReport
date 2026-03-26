@@ -9,7 +9,7 @@ dotenv.load_dotenv(os.path.join(ROOT, ".env"))
 
 BASE_URL = "https://chat-ai.academiccloud.de/v1"
 MODEL = "deepseek-r1-distill-llama-70b"
-# MODEL = "deepseek-r1"
+# MODEL = "qwen3-235b-a22b"
 
 client = OpenAI(api_key=os.getenv("SAIA_KEY"), base_url=BASE_URL)
 
@@ -34,6 +34,34 @@ hcr:MetricID hcr:MetricTitle metricTitle ;
     hcr:MetricType metricType ;
     hcr:MetricCategory MetricCategory ;
     hcr:Questions questions ;
+
+Refer to metrics by their category, the categories are 
+```
+derived
+disclosure_rate
+disclosure_single
+electricity_consumption
+emission
+emission_scope_1
+emission_scope_12
+emission_scope_123
+emission_scope_13
+emission_scope_2
+emission_scope_23
+emission_scope_3
+revenue
+unmapped
+waste
+waste_hazardous
+waste_hazardous_recycled
+waste_nonhazardous
+waste_nonhazardous_recycled
+waste_recycled
+water
+water_recycled
+water_withdrawal
+```
+
 
 Return a single code block denoted with ``` and nothing else.
 Only use the predicates
