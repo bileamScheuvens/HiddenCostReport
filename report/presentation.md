@@ -18,7 +18,6 @@ style: |
 
 <style>
   section {
-        /* background-image: url('res/boschfooter.png'); */
         background-repeat: no-repeat;
         background-position: bottom 0px right;
         background-size: 100% 30px ;
@@ -40,11 +39,11 @@ style: |
 ---
 
 ## Overview
-- Situation - why this work is necessary
-* What is TCA 
-* Can we scale it
-* Demo
-* Limitations
+- situation - why this work is necessary
+* what is True Cost Accounting 
+* can we scale it
+* demo
+* limitations
 
 
 ---
@@ -100,7 +99,7 @@ style: |
 <!-- 
 - make up for damages
 - pay those affected 
-- penalties
+- penalties, lawsuits
 - audits, structural changes
 -->
 
@@ -109,7 +108,7 @@ style: |
 
 ## Scaling True Cost Accounting 
 ![bg right width:10cm](res/growth.svg)
-* gather open data
+* find available data
 * define common units & measurements
 * make lots of assumptions
 
@@ -119,15 +118,15 @@ style: |
 ![bg right size:cover opacity:0.7](res/coffee.jpg)
 
 - Bocca Coffee
-    * Revenue: $\$6.9 \ million$
-    * Emissions: $100\ tonnes\ CO_2\ equivalent$ ?
+    * revenue: $\$6.9 \ million$
+    * emissions: $100\ tonnes\ CO_2\ equivalent$ ?
         -> * 300$/ton (Kikstra 2021)
-    * Electricity:  $100\ Mwh$ ?
+    * electricity:  $100\ Mwh$ ?
         -> 70$/Mwh (Sovacool 2021)
-    * Water usage: $1000m^3$ ?
+    * water usage: $1000m^3$ ?
         -> * 1$/m3 ?
        
-* Assume all products are proportionally reponsible for externalities
+* assume all products are proportionally reponsible for externalities
 
 ---
 
@@ -152,8 +151,9 @@ style: |
 ## Methodology
 - gather data
 * harmonize, categorize, assign costs
-* link to product
-* calculate hidden cost
+* link to product & calculate hidden cost
+* how to store this data?
+
 
 
 ---
@@ -170,7 +170,7 @@ style: |
 
 * flexibility
 * extensibility 
-* complexity of queries
+* relational queries
 
 </div>
 <div>
@@ -201,7 +201,7 @@ style: |
 ## Data Ingestion
 ![bg right size:cover ](res/metric_ex.png)
 
-* Selecting Sources
+* selecting sources
     - Wikirate (1k companies & 1k metrics)
     - OpenFoodFacts
     - OpenProductsFacts
@@ -217,12 +217,13 @@ style: |
 <div style="font-size: 28px"> 
 
 - ontology design is hard
-* Keyword matching (current approach)
+* keyword matching (current approach)
     * brittle
-    * Deduplication is nontrivial
+    * deduplication is nontrivial
         - unclear authority
         - differences in gathering / processing
         - unreliable self reporting
+* what's already out there?
 
 
 </div>
@@ -350,9 +351,10 @@ water_withdrawal                      |  4 |                               |    
 
 ---
 
-## What now?
-- product integration
-
+## What's next?
+- more data
+- promote adoption
+- regulation
 
 ---
 
