@@ -3,6 +3,7 @@
 #abbr.make(
   ("TCA", "True Cost Accounting"),
   ("ESG", "Environmental Social and Governance"),
+  ("OWL", "Web Ontology Language"),
   ("LLM", "Large Language Model"),
   ("KG", "Knowledge Graphs"),
   ("NGO", "Non Government Organization"),
@@ -23,9 +24,9 @@
 ]
 
 
-
-
 #pagebreak()
+
+
 
 #outline()
 
@@ -67,7 +68,10 @@
 //   - text integration
 //   - better pricing
 //   - better category mapping
+//
 
+*Acknowledgements*\
+The authors gratefully acknowledge the computing time granted by the KISSKI project. Some calculations for this research were conducted with computing resources under the project HiddenCostReport.
 
 = Introduction
 Neglecting costs which affect third parties in economic transactions leads to false equilibria in price finding.
@@ -110,6 +114,58 @@ These are cached and transformed from tabular format into triples, conforming to
 
 
 = Graph Utilization
+This chapter describes the way the @KG is made accessible to a user. Besides the included user-interface, a qlever endpoint is exposed which provide syntax highlighting, completion and execution analysis via the qlever-ui.
+Lastly, to accomodate users unfamiliar with @SPARQL, querying in natural language is supported through llm based translation, directly from the command-line interface.
+
+== UI
+
+== Qlever
+
+== Query Translation
+Translation of natural language is accomplished by zero-shot prompting an @LLM with a rough description of the schema, along with instructions to avoid empirically observed mistakes. The full preprompt can be found in @appendix_prompt.
+The model tasked with this translation is a degree of freedom, during development the model "deepseek-r1-distill-llama-70b" hosted by the #link("https://kisski.gwdg.de/en/")[KISSKI] initiative was used, as it delivered decent reasoning capability while being cheap at inference, though a more capable model may be selected for better results.
+Due to the number of potential queries and nondeterministic responses, quantitative assessment of said results proved difficult.
+We instead offer qualitative remarks:
+
+For simple retrieval the approach is mostly reliable, but it begins to struggle with nested queries or complex dependencies.
+For example for the question "find companies that increased their emissions without loss of revenue in 2016" in one instance produced the sparql query:
+
+```sparql
+SELECT ?company ?emissionValue2016 ?revenueValue2016
+WHERE {
+  ?company hcr:hasMetric ?emission2016 ;
+           hcr:hasMetric ?revenue2016 ;
+           hcr:hasMetric ?emission2015 ;
+           hcr:hasMetric ?revenue2015 .
+
+  ?emission2016 hcr:MetricID ?emissionMetricID ;
+             hcr:Year 2016 ;
+             hcr:Value ?emissionValue2016 .
+
+  ?revenue2016 hcr:MetricID ?revenueMetricID ;
+              hcr:Year 2016 ;
+              hcr:Value ?revenueValue2016 .
+
+  ?emission2015 hcr:MetricID ?emissionMetricID ;
+             hcr:Year 2015 ;
+             hcr:Value ?emissionValue2015 .
+
+  ?revenue2015 hcr:MetricID ?revenueMetricID ;
+              hcr:Year 2015 ;
+              hcr:Value ?revenueValue2015 .
+
+  ?emissionMetricID hcr:MetricCategory "emission" ;
+                   hcr:MetricID ?emissionMetricID .
+
+  ?revenueMetricID hcr:MetricCategory "revenue" ;
+                   hcr:MetricID ?revenueMetricID .
+
+  FILTER (?emissionValue2016 > ?emissionValue2015 && ?revenueValue2016 >= ?revenueValue2015)
+}
+```
+This is logically and syntactically correct, but since it contains self references of the metric IDs, which the @SPARQL engine interprets as the condition that a triple `metricID hasMetric metricID` exists, it returns no results.
+One way to address these trivial errors would be an agentic setting, where the model can contiually query the @KG until the query has results or it has been verified that the required information is not present in the graph.
+We leave this as future work.
 
 
 = Evaluation
@@ -120,31 +176,56 @@ Lastly one can qualitative judge the performance of the @LLM query translation c
 
 
 == True Cost Accuracy
-Many existing @TCA reports (@environmentTEEBAgriFoodEvaluationFramework2024 @michalkeTrueCostAccounting2023a @truepricefood, @truepriceapple, @truepricejeans) focus on a single product. Unfortunately the lack of data granularity makes this difficult to reproduce.
+Many existing @TCA reports (@environmentTEEBAgriFoodEvaluationFramework2024 @michalkeTrueCostAccounting2023a @truepricefood, @truepriceapple, @truepricejeans, @truepricecoffee) focus on a single product. Unfortunately the lack of data granularity makes this difficult to reproduce.
 As a rough approximation we compute the hidden costs per dollar of revenue for a company and multiply this with the price of a product to get the hidden cost.
 This approach has several assumptions which do not hold in practice:
 - All products contribute to all metrics in proportion to their price.
 - The entire supply chain is operated by the same company #footnote[There are inconsistencies between metrics, scope 2 and 3 emissions for example, account for external factors, while water usage only accounts for in house consumption.]
 - The costs associated with metrics are location independent.
 
-To approximate @truepricejeans, we may examine a denim Brand such as Levi Strauss and compute the price gap from the available metrics.
-// TODO
+To approximate @truepricecoffee, we may examine a denim Brand such as Levi Strauss and compute the price gap from the available metrics.
+// TODO move to intro. just
 
 == @KG Assessment
 @KG quality has several dimensions, the exact definitions and distinctions being subject of dispute in the literature @wangKnowledgeGraphQuality2021. The importance of each dimension, depends on the usecase. We follow the methodology of @wangKnowledgeGraphQuality2021 and assess the @KG along the axes of accuracy, completeness, consistency, timeliness, trustworthiness and availability.
 
 === Accuracy
-Accuracy describes the degree of factuality as well degree of conformity to the specification in our case, @RDF (syntactic validity).
+Accuracy describes the degree of factuality as well degree of conformity to the specification in our case, @RDF (syntactic validity). @wangKnowledgeGraphQuality2021
 Quantifying the accuracy requires ground truth data, which is unavailable by design. If it were available for parts of the graph, it would simply be incorporated and serve at most as a lower bound to accuracy.
 Syntactic validity on the other hand is guaranteed by the current set of data ingestion methods, as incorrectly formatted data is discarded to preserve validity.
 This is subject to change with integration of less well formatted data sources.
 
+=== Completeness
+Completeness describes how much of the data required for a particular task is present in the graph. @wangKnowledgeGraphQuality2021
+The application at hand theoretically requires complete knowledge of the universe and one could state that technically the completeness of the @KG is exactly 0.
+However for practical purpose we limit outselves to obtainable data and instead model companies and metrics as a bipartite graph.
+Connecting each company to the metrics we have about it and computing the edge density gives us a measure that can meaningfully substite completeness.
+At the time of writing, this density lies at $12.32%$ across the time of recording. When broken down to yearly level the density drops to $1.02%$.
+Density this low, even after filtering for the most documented companies on wikirate, is alarming and severely limits the amount of companies that meaningful true price approximations can be made for.
+
+To get a better picture, @metrics_per_company shows the head of the distribution of around 250 companies, while @companies_per_metric shows the opposite perspective: the number of companies that report a value for each metric.
+
+
+#figure(
+  box(image("res/metrics_per_company.png"), clip: true, inset: (bottom: -2.5cm, right: -75%, top: -1cm)),
+  caption: "Number of Metrics per Company.",
+) <metrics_per_company>
+
+#figure(
+  box(image("res/companies_per_metric.png"), clip: true, inset: (bottom: -2.5cm, right: -75%, top: -1cm)),
+  caption: "Number of Companies per Metric.",
+) <companies_per_metric>
+
+
 
 === Consistency
-Consistency is a measure of in graph contradictions.
+Consistency is a measure of in-graph contradictions. @wangKnowledgeGraphQuality2021
+While some contradictions are to be expected due to the crowd sourced nature of the data landscape, a certain degree of consistency can be enforced through the ontology. For example, since the relationship between the metrics "emissions scope 1", "emissions scope 2" and "emissions scope 1 and 2 combined" is obvious and (once encoded in the ontology) a violation of this relationship could trigger self correction or alert to the need of intervention.
+Since this behavior would depend on a complete and robust ontology we leave it as future work.
 
 
-
+=== Timeliness
+Timeliness describes whether the data in the graph is up-to-date. @wangKnowledgeGraphQuality2021
 
 
 // - comparison to trueprice reports
@@ -152,6 +233,13 @@ Consistency is a measure of in graph contradictions.
 // - query translation
 
 = Discussion
+This work attempted to explore whether it is possible to automatically calculate the holistict true price of any product across all industries just from publicly available metrics about the company that produces it.
+At the time of writing it unfortunately has to be concluded, that this is the not the case.
+Even for true price lower bounding and when tolerating the clearly violated assumptions the resulting values are simply too unreliable (often with volatility across orders of magnitude year over year) to be regarded as anything more than noise.
+
+Nonetheless there is hope for this type of approach in the future. With more careful scoping, diligent reporting and inclusion of curated data it might well be possible to create a tool to inform decision-making both along a supply chain and for individual consumers.
+
+
 
 // discourages reporting
 // - usefulness
@@ -230,6 +318,63 @@ Consistency is a measure of in graph contradictions.
 
 
 ```
+
+= Query Translation Prompt <appendix_prompt>
+
+#raw(
+  "Your task is to translate natural language questions into SPARQL queries.
+
+The knowledge base is comprised of several sources, most prominently wikirate metrics.
+The sources are not all harmonized, avoid specific vocabulary (tons might be called tonnes elsewhere).
+The schema of the knowledge graph is as follows:
+PREFIX hcr: <http://hiddencostreport.org/schema#>
+
+hcr:company_id hcr:Name companyName ;
+    hcr:OpenCorporatesID openCorporatesID ;
+    hcr:hasMetric _:metricObservation .
+_:metricObservation hcr:MetricID metricID ;
+    hcr:Value observationValue ;
+    hcr:Year observationYear ;
+hcr:MetricID hcr:MetricTitle metricTitle ;
+    hcr:MetricDesigner MetricDesigner ;
+    hcr:Unit unit ;
+    hcr:ValueType valuetype ;
+    hcr:MetricType metricType ;
+    hcr:MetricCategory MetricCategory ;
+    hcr:Questions questions ;
+
+Refer to metrics by their category, the categories are:
+derived
+disclosure_rate
+disclosure_single
+electricity_consumption
+emission
+emission_scope_1
+emission_scope_12
+emission_scope_123
+emission_scope_13
+emission_scope_2
+emission_scope_23
+emission_scope_3
+revenue
+unmapped
+waste
+waste_hazardous
+waste_hazardous_recycled
+waste_nonhazardous
+waste_nonhazardous_recycled
+waste_recycled
+water
+water_recycled
+water_withdrawal
+
+Return a single code block denoted with ```.
+Only use the provided predicates.
+Include PREFIX in your query.
+",
+)
+
+
 
 #bibliography("hiddencostreport.bib")
 
