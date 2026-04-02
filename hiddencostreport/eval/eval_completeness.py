@@ -1,6 +1,8 @@
 import pandas as pd
 import plotly.express as px
 from ..graph_manager import GraphManager
+import os
+from ..constants import DIAGRAMDIR
 
 px.defaults.template = "plotly"
 
@@ -77,12 +79,20 @@ SELECT ?metrictitle ?year (COUNT(DISTINCT ?companyid ) as ?count) WHERE {
 
 def eval_completeness(graph: GraphManager):
     dfs = {}
-    for q in eval_queries:
+    for q, name in zip(
+        eval_queries,
+        [
+            "metrics_per_company",
+            "metrics_per_company_per_year",
+            "companies_per_metric",
+            "companies_per_metric_per_year",
+        ],
+    ):
         df = q.run(graph)
         dfs[q.name] = df
         fig = px.bar(df, y="?count", title=q.name, **q.plot_args)
         fig.update_layout(width=2000)
-        fig.show()
+        fig.write_image(os.path.join(DIAGRAMDIR, f"{name}.png"), scale=4)
 
     n_companies = len(dfs["metrics_per_company"])
     n_metrics = len(dfs["companies_per_metric"])
@@ -92,7 +102,7 @@ def eval_completeness(graph: GraphManager):
     edges_company_obs = dfs["metrics_per_company_per_year"]["?count"].sum()
     print(f"""
 Density for {n_companies} companies, across {n_metrics} metrics: 
-          {edges_company_metric / (n_companies * n_metrics):.4f}%
+          {100 * edges_company_metric / (n_companies * n_metrics):.4f}%
 Total density across {n_years} years:
-          {edges_company_obs / (n_companies * n_metrics * n_years):.4f}%
+          {100 * edges_company_obs / (n_companies * n_metrics * n_years):.4f}%
 """)
