@@ -112,12 +112,39 @@ These are cached and transformed from tabular format into triples, conforming to
 
 
 
+=== Integrating External Sources
 
 = Graph Utilization
 This chapter describes the way the @KG is made accessible to a user. Besides the included user-interface, a qlever endpoint is exposed which provide syntax highlighting, completion and execution analysis via the qlever-ui.
 Lastly, to accomodate users unfamiliar with @SPARQL, querying in natural language is supported through llm based translation, directly from the command-line interface.
 
 == UI
+The user interface provides the core functionality for interacting with the @KG.
+It first presents the user with the option to build the graph from a selection of sources, alongside a dropdown preview of relevant parts of the schema to help with orientation. @front_page shows this page.
+
+#figure(image("res/front_page.png", width: 50%), caption: "Front page of the UI.")<front_page>
+
+The next tab, seen in @query_page allows for direct query access of the graph.
+It includes a searchbar for quick retrieval of Company IDs and a text field for query design.
+Once submitted, the query is evaluated and the result is shown as a table and can additionally be downloaded in csv format.
+Notably the access is read-only, exclusively allowing `SELECT` statements to prevent corruption of the @KG once fully constructed and indexed.
+
+Upon first open, the query tab shows an example query, selecting all metrics for the selected company.
+This demonstrates the schema applied in @SPARQL, provides a convenient namespace and demonstrates that graph construction was successful.
+
+
+#figure(image("res/query_page.png", width: 50%), caption: "Query page of the UI with an example query.")<query_page>
+
+Lastly the ui includes a tab for computing the true cost of a product given a company and year.
+Once company and year are selected, the user is shown a breakdown of the metrics that were assigned a category with monetary equivalent. The are filterable by supercategory and aggregated to arrive at a total hidden cost estimate for the company in the given year.
+
+Since the OpenProductsFacts dataset does not yet include a satisfactory level of coverage, the user is instead asked to provide just the price of a product of interest, which acts as a placeholder until OpenProductsFacts is well populated and integrated.
+Given this, the revenue is retrieved and the hidden cost per dollar of revenue is computed to obtain the proportional true cost of the product of interest.
+
+#figure(
+  image("res/truecost_page.png", width: 80%),
+  caption: "True cost page of the UI with an example selection.",
+)<truecost_page>
 
 == Qlever
 
