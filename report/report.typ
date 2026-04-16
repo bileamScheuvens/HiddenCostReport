@@ -2,16 +2,17 @@
 #show: abbr.show-rule
 #abbr.make(
   ("TCA", "True Cost Accounting"),
-  ("API", "Application Program Interface"),
+  ("CLI", "Command Line Interface"),
+  ("API", "Application Programming Interface"),
   ("SCC", "Social Cost of Carbon"),
-  ("UNEP", "United Nations Environment Program"),
+  ("UNEP", "United Nations Environment Programme"),
   ("TEEB", "The Economics of Ecosystems and Biodiversity"),
   ("NLP", "Natural Language Processing"),
-  ("ESG", "Environmental Social and Governance"),
+  ("ESG", "Environmental, Social and Governance"),
   ("OWL", "Web Ontology Language"),
   ("LLM", "Large Language Model"),
   ("KG", "Knowledge Graphs"),
-  ("NGO", "Non Government Organization"),
+  ("NGO", "Non-Governmental Organization"),
   ("ATCA", "Approximate True Cost Accounting"),
   ("RDF", "Resource Description Framework"),
   ("SPARQL", "SPARQL Protocol and RDF Query Language"),
@@ -77,12 +78,12 @@
 
 
 = Introduction
-Neglecting costs which affect third parties in economic transactions leads to false equilibria in price finding.
-This not only reduces market efficiency but incentivizes unsustainable practices, by effectively subsidizing behavior that has hard to assess consequences.
+Neglecting costs which affect third parties in economic transactions leads to incorrect price equilibria.
+This not only reduces market efficiency but incentivizes unsustainable practices, by effectively subsidizing behavior that has hard-to-assess consequences.
 
-To suppress this, one would have to consider (and assign costs to) all externalities relevant for the production of a good. Attempts at this difficult and time consuming practice are often called @TCA.
+To address this, one would have to consider (and assign costs to) all externalities relevant for the production of a good. Attempts at this difficult and time consuming practice are often called @TCA.
 
-To illustrate what this looks like in practice, we may examine an existing report on the true price of coffee beans. For the specific brand of beans, @truepricecoffee estimates the true cost at around $9.33€"/ kg"$ compared to the market price of $8€$. The breakdown of the additional cost into categories can be seen in @tca_coffee.
+To illustrate what this looks like in practice, we may examine an existing report on the true price of coffee beans. For the specific brand of beans, @truepricecoffee estimates the true cost at around $9.33€"/ kg"$ compared to the market price of $8€"/ kg"$. The breakdown of the additional cost into categories can be seen in @tca_coffee.
 In @sec_methodology we revisit this example with our proposed methodology.
 
 This work investigates whether it is possible to automate this process at scale by aggregating and processing public data to arrive at an approximation of the true cost.
@@ -106,18 +107,22 @@ We term this approach @ATCA and provide a proof-of-concept implementation to fac
 // - explain price gap
 
 == Related Work
-Several works exist, which explore the concept of pricing displaced harm, yet to the best of our knowledge, none of them attempt automating this process end-to-end.
+Several works exist, which explore the concept of pricing displaced harm with varying methodologies and target audiences.
 
 The True Price Foundation @truepricefoundation standardized and open-sourced a method for calculating a true price, which has been applied to different products such as @truepriceapple, @truepricefood, @truepricejeans, @truepricecoffee.
 
-TEEBAgriFood @environmentTEEBAgriFoodEvaluationFramework2024 is part of the @TEEB intiative, which itself is part of the @UNEP.
+TEEBAgriFood @environmentTEEBAgriFoodEvaluationFramework2024 is a division of the @TEEB initiative, which itself is part of the @UNEP.
 It currently spans 14 countries and prices natural factors that are usually ignored in an attempt to influence policy making.
 
+The TCA Accelerator @tcaaccelerator is a network that advocates for the use of @TCA together with the Global Alliance for the Future of Food @globalalliancefood, focusing on interdisciplinary knowledge sharing.
+
+These and similar initiatives tackle the core problem of pricing externalities, but to the best of our knowledge, no prior work addresses the problem of automating this process end-to-end from existing data. In addition, they disproportionally focus on agriculture, while our approach works for products regardless of industry.
+
+
 = Methodology <sec_methodology>
-@tca_coffee presented the results of a proper true cost report by @truepricefoundation. Imagine how we might approach this same product without the ability to inspect the production chain or approach the company for additional information. Instead we rely on the incomplete data we have. For a given year we may know the revenue of _Bocca Coffee_ to be $\$ 6.9$ million.
-For illustrative reasons, imagine we also know the emissions to be $100$ tonnes of $C O_2$ equivalent, alongside a water consumption of $6000 m^3$ and electricity consumption $100 M w h$.
-We may then consult our table of costs per metric unit #footnote[for example obtained using the methodology of @truepricefoundation] to find the priced externalities from greenhouse gas emissions#footnote[sometimes abbreviated @SCC] at $312€$ / ton and water at $1.62€$ / $m^3$. For electricity we use the estimate by Sovacool2021 at $70€$ / $M w h$.
-// TODO fix citation
+@tca_coffee presented the results of a proper true cost report by @truepricefoundation. Imagine how we might approach this same product without the ability to inspect the production chain or ask the company for additional information. Instead we rely on the incomplete data we have. For a given year we may know the revenue of _Bocca Coffee_ to be $\$ 6.9$ million.
+For illustrative reasons, imagine we also know the emissions to be $100$ tons of $C O_2$ equivalent, alongside a water consumption of $6000 m^3$ and electricity consumption $100 M w h$.
+We may then consult our table of per unit costs #footnote[For example obtained using the methodology of @truepricefoundation] to find the priced externalities from greenhouse gas emissions#footnote[sometimes abbreviated @SCC] at $312€$ / ton and water at $1.62€$ / $m^3$. For electricity we use the estimate by @sovacool2021energy at $70€$ / $M w h$.
 The result of aggregating these externalities and breaking them down proportionally to a kilogram of beans can be seen in @tca_coffee_approx.
 
 #figure(
@@ -139,16 +144,22 @@ The data ingestion phase is designed to be flexible and extensible to serve diff
 Inclusion of sources can be toggled in the interface. With the currently available sources graph construction and indexing is a matter of minutes on consumer hardware. This is subject to change with the inclusion of more or bottlenecked sources, such as those only available via @API.
 After adding the schema (see @appendix_schema), each source is parsed into triples and stored using the graph database oxigraph @pellissiertanonOxigraph2026.
 
-The availabe sources are described in the following.
+The available sources are described in the following.
 
 === Source: Wikirate
 Wikirate @Wikirate is an open data platform, which crowdsources and hosts a variety of company data relating to @ESG issues.
-Each data point regardless of type (Company, Metric, Project, Tag, Image, ...) lives in a shared namespace as so called cards, which can be fetched from an API.\
+Each data point regardless of type (Company, Metric, Project, Tag, Image, ...) lives in a shared namespace as so called cards, which can be fetched from an API.
+
 To include wikirate in the graph, a subset#footnote[This selection is done purely for scoping reasons. The source has a long tail of largely isolated and therefore less interesting data points.] of 1000 companies with most data points associated is selected, alongside the 1000 most bookmarked metrics.
 These are cached and transformed from tabular format into triples, conforming to the schema described in @appendix_schema.
 
 
 === Source: OpenFoodFacts & OpenProductsFacts
+OpenFoodFacts @OpenFoodFacts a crowdsourced database of food products which tracks information such as brand, ingredients, nutritional value and allergens.
+The project was started in 2012 and expanded into several domains since then. Most notably, in 2018 OpenProductsFacts @OpenProductsFacts was launched, which generalizes the venture to products, which do not fall under the more specialized categories such as food or beauty products.
+At the time of writing @OpenFoodFacts includes around $4.4$ million food articles, while @OpenProductsFacts includes around $40.000$ products.
+Both are exported once and formatted to triples.
+For prospective deployment, the respective @API:pls would have to be integrated to keep the data up to date.
 
 
 === Harmonization
@@ -159,9 +170,8 @@ Deciding on common vocabulary at data ingestion and enforcing the harmonized for
 Alongside cleanup of minor data quality issues, the most impactful harmonization steps in the pipeline are company name unification and metric categorization.
 
 
-// TODO cite stemming
 <name_unification>
-To avoid ambiguity we introduce IDs for each Company. To obtain a map from all possible representations of company name to its ID, we draw inspiration from the @NLP technique of stemming to reduce a name down to a base form. Using regular expressions we strip away organizational indicators such as "inc." or "limited" and non-ascii characters.
+To avoid ambiguity we introduce IDs for each Company. To obtain a map from all possible representations of company name to its ID, we draw inspiration from the @NLP technique of stemming to reduce a name down to a base form. Using regular expressions we strip away organizational indicators such as "inc." or "limited" and non-ASCII characters.
 We apply this to the name of the company and any known aliases and store the reduced forms in a lookup table mapping to the created ID.
 Any collisions are recorded and either decided manually or discarded for the colliding aliases.
 Access to the lookup table is then provided by checking for the equally sanitized form of the query term.
@@ -173,25 +183,25 @@ The proof-of-concept implementation uses a curated keyword matching approach for
 One potential improvement would be querying an @LLM with the metric title and the task of assigning a category from the ontology. This approach is not error proof either, but with descriptive category names it is reasonable to believe it would perform and especially generalize better than a curated list of keywords.
 
 
-Having described the data ingestion and processing pipeline we conclude this section with a vision of how to seamlessly utilize existing resources.
+Having described the data ingestion and processing pipeline we conclude this section with a hint for how to utilize existing resources.
 
-=== Integrating External Sources
-@RDF supports the notion of federated queries. // TODO
+@RDF supports federated queries through the `SERVICE` keyword. This can be used to combine results from external endpoints, so long as there exists overlap between the graphs.
+For example, since companies can be identified by their OpenCorporates ID which is often present in the companies Wikidata representation. Therefore information from Wikidata can directly be integrated at query time, without modifications to the graph.
 
-= Graph Utilization
-This chapter describes the way the @KG is made accessible to a user. Besides the included user-interface, a qlever endpoint is exposed which provide syntax highlighting, completion and execution analysis via the qlever-ui.
-Lastly, to accomodate users unfamiliar with @SPARQL, querying in natural language is supported through @LLM based translation, directly from the command-line interface.
+== Graph Utilization
+This chapter describes the way the @KG is made accessible to a user. Besides the included user-interface, a qlever endpoint is exposed which provides syntax highlighting, completion and execution analysis via the qlever-ui.
+Lastly, to accommodate users unfamiliar with @SPARQL, querying in natural language is supported through @LLM\-based translation, directly from the command-line interface.
 
-== UI
+=== UI
 The user interface provides the core functionality for interacting with the @KG.
 It first presents the user with the option to build the graph from a selection of sources, alongside a dropdown preview of relevant parts of the schema to help with orientation. @front_page shows this page.
 
 #figure(image("res/front_page.png", width: 50%), caption: "Front page of the UI.")<front_page>
 
 The next tab, seen in @query_page allows for direct query access of the graph.
-It includes a searchbar for quick retrieval of Company IDs and a text field for query design.
+It includes a search bar for quick retrieval of Company IDs and a text field for query design.
 Once submitted, the query is evaluated and the result is shown as a table and can additionally be downloaded in csv format.
-Notably the access is read-only, exclusively allowing `SELECT` statements to prevent corruption of the @KG once fully constructed and indexed.
+Notably, the access is read-only, exclusively allowing `SELECT` statements to prevent corruption of the @KG once fully constructed and indexed.
 
 Upon first open, the query tab shows an example query, selecting all metrics for the selected company.
 This demonstrates the schema applied in @SPARQL, provides a convenient namespace and demonstrates that graph construction was successful.
@@ -199,8 +209,8 @@ This demonstrates the schema applied in @SPARQL, provides a convenient namespace
 
 #figure(image("res/query_page.png", width: 50%), caption: "Query page of the UI with an example query.")<query_page>
 
-Lastly the ui includes a tab for computing the true cost of a product given a company and year.
-Once company and year are selected, the user is shown a breakdown of the metrics that were assigned a category with monetary equivalent. The are filterable by supercategory and aggregated to arrive at a total hidden cost estimate for the company in the given year.
+Lastly, the UI includes a tab for computing the true cost of a product given a company and year.
+Once company and year are selected, the user is shown a breakdown of the metrics that were assigned a category with monetary equivalent. They are filterable by supercategory and aggregated to arrive at a total hidden cost estimate for the company in the given year.
 
 Since the OpenProductsFacts dataset does not yet include a satisfactory level of coverage, the user is instead asked to provide just the price of a product of interest, which acts as a placeholder until OpenProductsFacts is well populated and integrated.
 Given this, the revenue is retrieved and the hidden cost per dollar of revenue is computed to obtain the proportional true cost of the product of interest.
@@ -210,16 +220,23 @@ Given this, the revenue is retrieved and the hidden cost per dollar of revenue i
   caption: "True cost page of the UI with an example selection.",
 )<truecost_page>
 
-== Qlever
 
-== Query Translation
+For more general queries to the knowledge base we refer to the Qlever UI, which is explained in the following.
+
+=== Qlever
+Qlever @bast2017qlever is a query engine for @RDF using the @SPARQL language.
+It provides a user interface that has many quality of life features, such as autocompletion, syntax highlighting, detailed error messages and query performance profiling to help with debugging.
+The @CLI provides a command to index the graph with Qlever and start up its server and ui, which can then be opened and used in a browser.
+For users who prefer to forego manual query writing entirely, we also offer a natural language to @SPARQL interface:
+
+=== Query Translation
 Translation of natural language is accomplished by zero-shot prompting an @LLM with a rough description of the schema, along with instructions to avoid empirically observed mistakes. The full preprompt can be found in @appendix_prompt.
 The model tasked with this translation is a degree of freedom, during development the model "deepseek-r1-distill-llama-70b" hosted by the #link("https://kisski.gwdg.de/en/")[KISSKI] initiative was used, as it delivered decent reasoning capability while being cheap at inference, though a more capable model may be selected for better results.
 Due to the number of potential queries and nondeterministic responses, quantitative assessment of said results proved difficult.
 We instead offer qualitative remarks:
 
 For simple retrieval the approach is mostly reliable, but it begins to struggle with nested queries or complex dependencies.
-For example for the question "find companies that increased their emissions without loss of revenue in 2016" in one instance produced the sparql query:
+For example for the question "find companies that increased their emissions without loss of revenue in 2016" in one instance produced the @SPARQL query:
 
 ```sparql
 SELECT ?company ?emissionValue2016 ?revenueValue2016
@@ -255,7 +272,7 @@ WHERE {
 }
 ```
 This is logically and syntactically correct, but since it contains self references of the metric IDs, which the @SPARQL engine interprets as the condition that a triple `metricID hasMetric metricID` exists, it returns no results.
-One way to address these trivial errors would be an agentic setting, where the model can contiually query the @KG until the query has results or it has been verified that the required information is not present in the graph.
+One way to address these trivial errors would be an agentic setting, where the model can continually query the @KG until the query has results or it has been verified that the required information is not present in the graph.
 We leave this as future work.
 
 
@@ -274,8 +291,11 @@ This approach has several assumptions which do not hold in practice:
 - The entire supply chain is operated by the same company #footnote[There are inconsistencies between metrics, scope 2 and 3 emissions for example, account for external factors, while water usage only accounts for in house consumption.]
 - The costs associated with metrics are location independent and constant.
 
-@tca_coffee_approx demonstrates that an approximation using our methodology may at least be in the order of magnitude as a diligent true cost report, while highlighting some of the shortcomings, such as the fact that the approximation is more of a lower-bounding.
-The scarce data landscape, both in the realm of true cost reports as well available supply chain data makes a rigorous assessment of our systems accuracy difficult. We excuse this with refererence to the fact, that this is a proof of concept implementation.
+@tca_coffee_approx demonstrates that an approximation using our methodology may at least be on the same order of magnitude as a diligent true cost report, yielding a true cost gap of $0.36€$ ($4.76%$) compared to the $1.32€$ ($16.5%$) found by @truepricecoffee.
+while highlighting some of the shortcomings, such as the fact that the approximation is more of a lower-bounding.
+The scarce data landscape, both in the realm of true cost reports as well available supply chain data makes a rigorous assessment of our systems accuracy difficult.
+
+
 
 == @KG Assessment
 @KG quality has several dimensions, the exact definitions and distinctions being subject of dispute in the literature @wangKnowledgeGraphQuality2021. The importance of each dimension, depends on the usecase. We follow the methodology of @wangKnowledgeGraphQuality2021 and assess the @KG along the axes of accuracy, completeness, consistency, timeliness, trustworthiness and availability.
@@ -289,10 +309,10 @@ This is subject to change with integration of less well formatted data sources.
 === Completeness
 Completeness describes how much of the data required for a particular task is present in the graph. @wangKnowledgeGraphQuality2021
 The application at hand theoretically requires complete knowledge of the universe and one could state that technically the completeness of the @KG is exactly 0.
-However for practical purpose we limit outselves to obtainable data and instead model companies and metrics as a bipartite graph.
-Connecting each company to the metrics we have about it and computing the edge density gives us a measure that can meaningfully substite completeness.
+However for practical purpose we limit ourselves to obtainable data and instead model companies and metrics as a bipartite graph.
+Connecting each company to the metrics we have about it and computing the edge density gives us a measure that can meaningfully substitute completeness.
 At the time of writing, this density lies at $12.32%$ across the time of recording. When broken down to yearly level the density drops to $1.02%$.
-Density this low, even after filtering for the most documented companies on wikirate, is alarming and severely limits the amount of companies that meaningful true price approximations can be made for.
+A density this low, even after filtering for the most documented companies on wikirate, is alarming and severely limits the amount of companies that meaningful true price approximations can be made for.
 
 To get a better picture, @metrics_per_company shows the head of the distribution of around 250 companies, while @companies_per_metric shows the opposite perspective: the number of companies that report a value for each metric.
 
@@ -325,7 +345,7 @@ High timeliness is not of critical important to the task of @ATCA, nonetheless i
 
 === Trustworthiness
 Trustworthiness describes how much the data can be trusted as objective and verifiable. @wangKnowledgeGraphQuality2021 It strongly correlated with, but distinct from accuracy in the sense that it has a subjective component in judgement of authority and credibility for data sources.
-The @KG constructed in this work has a medium level of trustworthiness, since it includes crowdsourced and self reported data.
+The @KG constructed in this work has partial trustworthiness, since it includes crowdsourced and self reported data.
 While often hard to validate, the data is unlikely to be completely false, as companies are likely to face consequences when consistently misreporting.
 
 
@@ -334,12 +354,11 @@ While often hard to validate, the data is unlikely to be completely false, as co
 // - query translation
 
 = Discussion
-This work attempted to explore whether it is possible to automatically calculate the holistict true price of any product across all industries just from publicly available metrics about the company that produces it.
+This work attempted to explore whether it is possible to automatically calculate a holistic true price of any product across all industries just from publicly available metrics about the company that produces it.
 At the time of writing it unfortunately has to be concluded, that this is the not the case.
-Even for true price lower bounding and when tolerating the clearly violated assumptions the resulting values are simply too unreliable (often with volatility across orders of magnitude year over year) to be regarded as anything more than noise.
+Even for true price lower bounding and when tolerating the clearly violated assumptions the resulting values are simply too unreliable (often with volatility across orders of magnitude year over year) to be regarded as little more than noise.
 
 Nonetheless there is hope for this type of approach in the future. With more careful scoping, diligent reporting and inclusion of curated data it might well be possible to create a tool to inform decision-making both along a supply chain and for individual consumers.
-
 
 
 // discourages reporting
