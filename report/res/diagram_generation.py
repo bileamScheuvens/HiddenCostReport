@@ -117,9 +117,9 @@ observations = 169940
 
 proportion = 8 / 6900000
 
-water_approx = round(1000 * 5 * proportion, 3)
-electricity_approx = round(100 * 70 * proportion, 2)
-emission_approx = round(1000 * 300 * proportion, 2)
+water_approx = round(6000 * 1.62 * proportion, 3)
+electricity_approx = round(100 * 70 * proportion, 3)
+emission_approx = round(1000 * 312 * proportion, 3)
 
 
 labels = ["trueprice.org", "approximation"]
@@ -160,7 +160,7 @@ fig.add_trace(
 )
 fig.add_trace(
     go.Bar(
-        name=f"0          | {emission_approx}$  Emission",
+        name=f"0          | {emission_approx}€  Emission",
         x=labels,
         y=[0, emission_approx],
         marker_color="#ebbcba",
@@ -176,7 +176,7 @@ fig.add_trace(
 )
 fig.add_trace(
     go.Bar(
-        name=f"{water}€ | {water_approx}$ Water use",
+        name=f"{water}€ | {water_approx}€ Water use",
         x=labels,
         y=[water, water_approx],
         marker_color="#9ccfd8",
@@ -184,7 +184,7 @@ fig.add_trace(
 )
 fig.add_trace(
     go.Bar(
-        name=f"0          | {electricity_approx}$ Electricity use ",
+        name=f"0          | {electricity_approx}€ Electricity use ",
         x=labels,
         y=[0, electricity_approx],
         marker_color="#f6c177",
