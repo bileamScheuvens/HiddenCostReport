@@ -33,7 +33,10 @@ class GraphManager:
         query_result = self.store.query(*args, **kwargs)
         df = []
         for row in query_result:
-            df.append(list(map(lambda x: x.value, row)))
+            try:
+                df.append(list(map(lambda x: x.value, row)))
+            except:
+                pass
 
         df = pd.DataFrame(df)
         if not df.empty:
