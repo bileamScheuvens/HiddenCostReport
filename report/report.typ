@@ -150,7 +150,7 @@ The available sources are described in the following.
 Wikirate @Wikirate is an open data platform, which crowdsources and hosts a variety of company data relating to @ESG issues.
 Each data point regardless of type (Company, Metric, Project, Tag, Image, ...) lives in a shared namespace as so called cards, which can be fetched from an API.
 
-To include wikirate in the graph, a subset#footnote[This selection is done purely for scoping reasons. The source has a long tail of largely isolated and therefore less interesting data points.] of 1000 companies with most data points associated is selected, alongside the 1000 most bookmarked metrics.
+To include Wikirate in the graph, a subset#footnote[The subset selection is done for scoping reasons in the proof-of-concept implementation. @Wikirate has a long tail of largely isolated and therefore less interesting data points.] of 1000 companies with most data points associated is selected, alongside the 1000 most bookmarked metrics.
 These are cached and transformed from tabular format into triples, conforming to the schema described in @appendix_schema.
 
 
@@ -358,7 +358,7 @@ This work attempted to explore whether it is possible to automatically calculate
 At the time of writing it unfortunately has to be concluded, that this is the not the case.
 Even for true price lower bounding and when tolerating the clearly violated assumptions the resulting values are simply too unreliable (often with volatility across orders of magnitude year over year) to be regarded as little more than noise.
 
-Nonetheless there is hope for this type of approach in the future. With more careful scoping, diligent reporting and inclusion of curated data it might well be possible to create a tool to inform decision-making both along a supply chain and for individual consumers.
+Nonetheless there is hope for this type of approach in the future. With more careful scoping, diligent reporting on the side of companies and inclusion of curated data it might well be possible to create a tool to inform decision-making both along a supply chain and for individual consumers.
 
 
 // discourages reporting

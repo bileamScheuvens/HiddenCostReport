@@ -6,3 +6,10 @@ qlever/*
 *.png
 !qlever/Qleverfile
 !qlever/Qleverfile-ui.yml
+*.abs
+*.bbl
+*.syntex.gz
+*.xmpdata
+*.xmpi
+Deprecated/
+*.gz
