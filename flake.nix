@@ -1,21 +1,5 @@
-# This flake provides a skeleton dev environment for PyTorch with CUDA support and for CUDA deevlopment /
-# compilation with NVCC.
-#
-# To test python:
-# $ nix develop
-# $ python
-# >>> import torch
-# >>> torch.cuda.is_available()
-# >>> torch.cuda.device_count()
-# >>> torch.cuda.get_device_name(0)
-#
-# To test CUDA (hello-world.cu):
-# $ nix develop
-# $ nvcc hello-world.cu -o hello
-# $ ./hello
-
 {
-  description = "A flake providing a dev shell for PyTorch with CUDA and CUDA development using NVCC.";
+  description = "Environment definition for hiddencostreport.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -36,20 +20,19 @@
           python3
           (python3.withPackages (
             ps: with ps; [
-              python-dotenv 
-              pyoxigraph 
-              pandas 
-              tqdm 
-              networkx 
-              pyvis 
-              matplotlib 
-              pytest 
-              openpyxl 
-              pint 
-              plotly 
+              python-dotenv
+              pyoxigraph
+              pandas
+              tqdm
+              networkx
+              pyvis
+              matplotlib
+              pytest
+              openpyxl
+              pint
+              plotly
               kaleido
               openai
-              torchWithCuda
               (ps.buildPythonPackage rec {
                 pname = "qlever";
                 version = "0.5.44";
@@ -60,7 +43,10 @@
                   inherit version;
                   hash = "sha256-1GHZtbPQlwBTmkvr6qRUw3mfcK9BWbW3JCEjZit+6jk="; # fill after first run
                 };
-                nativeBuildInputs = [ setuptools poetry-core ];
+                nativeBuildInputs = [
+                  setuptools
+                  poetry-core
+                ];
                 propagatedBuildInputs = [
                   psutil
                   termcolor
@@ -79,7 +65,10 @@
                       rev = "main";
                       hash = "sha256-HE4N3D6WveJtDw9In6v9Pwoi6RuXPCDi8rn1vywILTs="; # fill after first run
                     };
-                    nativeBuildInputs = [ setuptools poetry-core ];
+                    nativeBuildInputs = [
+                      setuptools
+                      poetry-core
+                    ];
                     propagatedBuildInputs = [ requests ];
                   })
                 ];
@@ -115,36 +104,18 @@
               })
             ]
           ))
-          cudatoolkit
-          cudaPackages.cudnn
-          cudaPackages.cuda_cudart
-
-          # Need to explicitly override the system gcc (gcc14 in this case) as CUDA requires a
-          # lower version for compatibility
-          gcc13
         ];
 
         shellHook = ''
-          export CUDA_PATH=${pkgs.cudatoolkit}
-
-          # Set CC to GCC 13 to avoid the version mismatch error
-          export CC=${pkgs.gcc13}/bin/gcc
-          export CXX=${pkgs.gcc13}/bin/g++
-          export PATH=${pkgs.gcc13}/bin:$PATH
-
           # Add necessary paths for dynamic linking
           export LD_LIBRARY_PATH=${
-            pkgs.lib.makeLibraryPath ([
-              "/run/opengl-driver" # Needed to find libGL.so
-            ] ++ buildInputs)
+            pkgs.lib.makeLibraryPath (
+              [
+                "/run/opengl-driver" # Needed to find libGL.so
+              ]
+              ++ buildInputs
+            )
           }:$LD_LIBRARY_PATH
-
-          # Set LIBRARY_PATH to help the linker find the CUDA static libraries
-          export LIBRARY_PATH=${
-            pkgs.lib.makeLibraryPath [
-              pkgs.cudatoolkit
-            ]
-          }:$LIBRARY_PATH
 
           eval "$(register-python-argcomplete qlever)" && export QLEVER_ARGCOMPLETE_ENABLED=1
         '';
