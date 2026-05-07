@@ -61,8 +61,6 @@ if args.command == "rebuild":
 
 
 elif args.command == "ui":
-    _config.set_option("server.headless", True)
-    _config.set_option("server.port", 8888)
     run(
         os.path.join("ui", "app.py"),
         args=[],
