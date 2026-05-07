@@ -2,7 +2,7 @@
   description = "Environment definition for hiddencostreport.";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
   };
 
   outputs =
@@ -63,7 +63,7 @@
                       owner = "overcat";
                       repo = pname;
                       rev = "main";
-                      hash = "sha256-HE4N3D6WveJtDw9In6v9Pwoi6RuXPCDi8rn1vywILTs="; # fill after first run
+                      hash = "sha256-JflM6Rx9TFS7EsusqBJViDvk3X3YAawzI75jn84cbZM="; # fill after first run
                     };
                     nativeBuildInputs = [
                       setuptools
@@ -96,7 +96,7 @@
                   repo = pname;
                   rev = "main";
 
-                  hash = "sha256-kwlsuU0Er1gV1QLx5sqcK45LJQQG8d8XgY4lNEYdV8I="; # fill after first run
+                  hash = "sha256-eHRVtvm2ELApnLXmk0CEdwZxQF6C74OVbj0DX2lEA0g="; # fill after first run
                 };
                 propagatedBuildInputs = [
                   html2text
