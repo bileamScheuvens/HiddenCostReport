@@ -62,7 +62,13 @@ if args.command == "rebuild":
 
 elif args.command == "ui":
     _config.set_option("server.headless", True)
-    run(os.path.join("ui", "app.py"), args=[], flag_options=[], is_hello=False)
+    _config.set_option("server.port", 8888)
+    run(
+        os.path.join("ui", "app.py"),
+        args=[],
+        flag_options={},
+        is_hello=False,
+    )
 elif args.command == "example_query":
     graph = GraphManager()
     # res = example_query(graph, "Nestle")
