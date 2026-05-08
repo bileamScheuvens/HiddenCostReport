@@ -6,7 +6,7 @@ from argparse import ArgumentParser
 from streamlit import config as _config
 from streamlit.web.bootstrap import run
 
-from .constants import METRICSPATH
+from .constants import METRICSPATH, ROOT
 from .data_sources.scrape_utils import download_metrics
 from .data_sources.truepricemethod import read_costs
 from .eval.eval_completeness import eval_completeness
@@ -62,7 +62,7 @@ if args.command == "rebuild":
 
 elif args.command == "ui":
     run(
-        os.path.join("ui", "app.py"),
+        os.path.join(ROOT, "..", "ui", "app.py"),
         args=[],
         flag_options={},
         is_hello=False,

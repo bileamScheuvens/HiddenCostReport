@@ -1,6 +1,3 @@
 [server]
 headless = true
-# address = "atac.health-nlp.com"
-port = 8888
-enablesXsrfProtection = false
-enableCORS = false
+port = 8889
