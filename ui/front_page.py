@@ -21,7 +21,11 @@ for source in SOURCES:
             components.html(G.generate_html(f"{source.name}.html"), height=600)
 
 
-rebuild_button = st.button("Rebuild Graph")
+rebuild_button = st.button(
+    "Rebuild Graph",
+    disabled=True,
+    help="Rebuilding disabled for demo, Graph is read only.",
+)
 
 if rebuild_button:
     with st.status("rebuilding"):
