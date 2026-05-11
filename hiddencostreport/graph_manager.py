@@ -14,7 +14,7 @@ class GraphManager:
     """Wrapper around graph store, which handles harmonized access and lookup tables."""
 
     def __init__(self, *args, **kwargs):
-        self.store = Store(GRAPHPATH)
+        self.store = Store.read_only(GRAPHPATH)
         self.company_id_lookup = CompanyIDLookup()
         self.company_id_lookup.load()
         self.metric_id_lookup = MetricIDLookup()
