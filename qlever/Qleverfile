@@ -32,7 +32,7 @@ SETTINGS_JSON   = { "num-triples-per-batch": 1000000 }
 # URL parameter `access_token`. It should not be easily guessable, unless you
 # don't mind others to get privileged access to your server.
 [server]
-PORT         = 8888
+PORT         = 8887
 ACCESS_TOKEN = _sTYOlOOw5VqZ
 TIMEOUT      = 5min
 
@@ -49,5 +49,5 @@ IMAGE  = docker.io/adfreiburg/qlever:latest
 # It determines the example queries and which SPARQL queries are launched to
 # obtain suggestions as you type a query.
 [ui]
-UI_PORT   = 8176
+UI_PORT   = 8888
 UI_CONFIG = default

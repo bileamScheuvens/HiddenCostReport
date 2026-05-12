@@ -15,6 +15,9 @@ if selected_company:
     id = graph.get_company_id(selected_company)
     st.write(f"company id: {id.split('#')[1]}")
 
+with st.sidebar:
+    st.link_button("Open Qlever UI", "http://atac-qlever.health-nlp.com")
+
 t_col1, t_col2 = st.columns(2, vertical_alignment="center")
 with t_col1:
     txt2sparql = st.text_area(
