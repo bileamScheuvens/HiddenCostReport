@@ -2,7 +2,7 @@ import plotly.graph_objects as go
 from collections import defaultdict
 
 
-def cost_sunburst(category_to_cost: dict):
+def cost_sunburst(category_to_cost: dict, just_total=False):
     """Sunburst plot of total cost broken down to category and individual metric"""
     entries = defaultdict(int)
     parents = {}
@@ -19,6 +19,8 @@ def cost_sunburst(category_to_cost: dict):
             entries[category] += lb
             entries[metric] += lb
 
+    if just_total:
+        return entries["total"]
     labels = []
     values = []
     for entry, value in entries.items():
@@ -35,3 +37,7 @@ def cost_sunburst(category_to_cost: dict):
         )
     )
     return fig, entries["total"]
+
+
+def cost_stability(years, totals):
+    return go.Figure(data=go.Scatter(x=years, y=totals))
