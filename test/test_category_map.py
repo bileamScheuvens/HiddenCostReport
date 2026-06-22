@@ -21,6 +21,9 @@ def test_metric_coverage(request):
     df[["ID", "category", "Metric Title", "Value Type", "Questions"]].to_csv(
         os.path.join(DATADIR, "test_artifacts", "mapped.csv"), index=False
     )
+    df[["category", "Metric Title"]].sample(50, random_state=1).to_csv(
+        os.path.join(DATADIR, "test_artifacts", "subset_50.csv"), index=False
+    )
     grouped = df.groupby("category")["ID"].count()
 
     request.config.metric_coverage = str(grouped)
