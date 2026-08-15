@@ -8,7 +8,7 @@ from ..constants import ROOT
 dotenv.load_dotenv(os.path.join(ROOT, ".env"))
 
 BASE_URL = "https://chat-ai.academiccloud.de/v1"
-MODEL = "deepseek-r1-distill-llama-70b"
+MODEL = "deepseek-v4-flash-0731"
 # MODEL = "qwen3-235b-a22b"
 
 client = OpenAI(api_key=os.getenv("SAIA_KEY"), base_url=BASE_URL)
