@@ -61,10 +61,13 @@ def example_metrics_metadata() -> nx.DiGraph:
     }
 
     G = nx.DiGraph()
-    center = "M<xxxxx>"
+    center = "M<xxx>"
     G.add_node(center)
     for p, o in edges.items():
         G.add_edge(center, o, label=p)
+
+    G.add_edge("_:b", center, label="{NS}:MetricID")
+    G.add_edge("C<xxx>", "_:b", label="{NS}:hasMetric")
     return G
 
 
@@ -105,7 +108,7 @@ def example_companies() -> nx.DiGraph:
     }
 
     G = nx.DiGraph()
-    center = "C<xxxxx>"
+    center = "C<xxx>"
     G.add_node(center)
     for p, o in edges.items():
         G.add_edge(center, o, label=p)
@@ -143,17 +146,17 @@ def parse_metric(graph: "GraphManager", metric_name: str, metric_designer: str) 
 
 def example_metric() -> nx.DiGraph:
     edges = {
-        "{NS}:MetricID": "M<xxxx>",
+        "{NS}:MetricID": "M<xxx>",
         "{NS}:Year": "<Year>",
         "{NS}:Value": "<Value>",
     }
 
     G = nx.DiGraph()
-    center = "BLANK"
+    center = "_:b"
     G.add_node(center)
     for p, o in edges.items():
         G.add_edge(center, o, label=p)
-    G.add_edge("C<xxxx>", center, label="hasMetric")
+    G.add_edge("C<xxx>", center, label="hasMetric")
     return G
 
 

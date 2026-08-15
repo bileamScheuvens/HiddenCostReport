@@ -15,9 +15,11 @@
       };
       devEnv = pkgs.python3.withPackages (
         ps: with ps; [
+          uv
           python-dotenv
           pyoxigraph
           pandas
+          pip
           tqdm
           networkx
           pyvis

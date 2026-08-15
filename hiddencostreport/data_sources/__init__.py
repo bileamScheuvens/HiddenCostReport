@@ -42,20 +42,20 @@ class Source:
 
 SOURCES = [
     Source(
-        name="wr_companies",
+        name="Companies (Wikirate)",
         parse_func=parse_companies,
         desc="List of companies from wikirate.",
         example=example_companies(),
     ),
     Source(
-        name="wr_metrics",
+        name="Metric Metadata (Wikirate)",
         parse_func=parse_metrics_metadata,
         desc="Wikirate metric metadata.",
         example=example_metrics_metadata(),
     ),
     # TODO make them individually adressable
     Source(
-        name="wr_curated_metrics",
+        name="Observations",
         parse_func=parse_metrics,
         desc="List of curated wikirate metric.",
         example=example_metric(),

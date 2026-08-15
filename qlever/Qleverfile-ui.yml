@@ -3,7 +3,7 @@ config:
     name: Default
     slug: default
     sortKey: 1
-    baseUrl: http://Athenai:8888
+    baseUrl: http://Athenai:8887
     apiToken: ''
     isDefault: true
     isNoSlugMode: 'False'
