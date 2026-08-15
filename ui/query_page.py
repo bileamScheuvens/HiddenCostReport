@@ -16,7 +16,7 @@ if selected_company:
     st.write(f"company id: {id.split('#')[1]}")
 
 with st.sidebar:
-    st.link_button("Open Qlever UI", "http://atca-qlever.health-nlp.com")
+    st.link_button("Open Qlever UI", "http://localhost:8888/default")
 
 t_col1, t_col2 = st.columns(2, vertical_alignment="center")
 with t_col1:
